@@ -1,0 +1,20 @@
+function App() {
+  let name = "Mateen Amin"
+  let role = "Full Stack Developer"
+  let age = 25
+  let isWorking = true
+
+  return (
+    <>
+      <h1 style={{ color: "blue" }}>
+        Mera naam {name} hai
+      </h1>
+      <p>Role: {role}</p>
+      <p>Age: {age}</p>
+      <p>Kaam kar raha hoon: {isWorking ? "Haan!" : "Nahi"}</p>
+      <p>2026 mein age: {age + 1}</p>
+    </>
+  )
+}
+
+export default App
