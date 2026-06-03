@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Custom Config</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'brand': '#6366F1',
+            'brand-dark': '#4F46E5',
+            'brand-light': '#EEF2FF',
+          },
+          fontFamily: {
+            'poppins': ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-gray-100 font-poppins p-10">
+
+  <!-- Custom Color Navbar -->
+  <nav class="bg-brand px-6 py-4 rounded-xl
+              flex justify-between items-center mb-8">
+    <h1 class="text-white text-xl font-bold">
+      Mateen.dev
+    </h1>
+    <div class="flex gap-6">
+      <a class="text-white hover:text-yellow-300 transition">Home</a>
+      <a class="text-white hover:text-yellow-300 transition">Projects</a>
+      <a class="text-white hover:text-yellow-300 transition">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="bg-brand-light p-10 rounded-2xl text-center mb-8">
+    <h1 class="text-5xl font-extrabold text-brand mb-4">
+      Mateen Amin
+    </h1>
+    <p class="text-gray-500 text-lg mb-6">
+      Full Stack Developer
+    </p>
+    <button class="bg-brand hover:bg-brand-dark
+                   text-white px-8 py-3 rounded-xl
+                   font-semibold transition duration-300">
+      Hire Me!
+    </button>
+  </div>
+
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="bg-white p-6 rounded-2xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-brand mb-2">Amazon Clone</h3>
+      <p class="text-gray-500 mb-4">HTML CSS se bana project</p>
+      <button class="bg-brand hover:bg-brand-dark text-white
+                     px-4 py-2 rounded-lg w-full transition">
+        View Project
+      </button>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-brand mb-2">Quiz App</h3>
+      <p class="text-gray-500 mb-4">JavaScript se bana project</p>
+      <button class="bg-brand hover:bg-brand-dark text-white
+                     px-4 py-2 rounded-lg w-full transition">
+        View Project
+      </button>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-brand mb-2">Portfolio</h3>
+      <p class="text-gray-500 mb-4">Tailwind se bana project</p>
+      <button class="bg-brand hover:bg-brand-dark text-white
+                     px-4 py-2 rounded-lg w-full transition">
+        View Project
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

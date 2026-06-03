@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tailwind Practice</title>
+
+  <!-- Bas yeh ek line add karo — Tailwind ready! -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-100 p-10">
+
+  <h1 class="text-4xl font-bold text-blue-600">
+    Mera Pehla Tailwind Page!
+  </h1>
+
+  <p class="text-gray-500 text-lg">
+    Yeh Tailwind se bana hai!
+  </p>
+
+  <button class="bg-blue-500 text-white px-6 py-2 rounded">
+    Click Me!
+  </button>
+
+ 
+
+  <h1 class="text-4xl font-extrabold text-blue-600 uppercase text-center">
+    Mateen Amin
+  </h1>
+
+  <p class="text-lg font-medium text-gray-500 text-center italic">
+    Web Developer
+  </p>
+
+  <p class="text-base text-gray-700 text-center underline">
+    mateen@gmail.com
+  </p>
+ <!-- Card -->
+  <div class="bg-white p-8 m-10 mx-auto">
+
+    <h1 class="text-3xl font-bold text-blue-600 mb-4">
+      Mateen Amin
+    </h1>
+
+    <p class="text-gray-500 mb-2">
+      Web Developer
+    </p>
+
+    <button class="bg-blue-500 text-white px-6 py-3 mt-4">
+      Hire Me!
+    </button>
+
+  </div>
+
+
+
+  
+
+  <!-- Navbar -->
+  <nav class="bg-blue-600 px-8 py-4 flex justify-between items-center">
+
+    <!-- Logo -->
+    <h1 class="text-white text-2xl font-bold">
+      Mateen.dev
+    </h1>
+
+    <!-- Links -->
+    <div class="flex gap-6">
+      <a class="text-white hover:text-yellow-300">Home</a>
+      <a class="text-white hover:text-yellow-300">About</a>
+      <a class="text-white hover:text-yellow-300">Projects</a>
+      <a class="text-white hover:text-yellow-300">Contact</a>
+    </div>
+
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="flex justify-center items-center h-64 flex-col gap-4">
+    <h1 class="text-4xl font-bold text-blue-600">
+      Hello, I'm Mateen!
+    </h1>
+    <p class="text-gray-500 text-lg">
+      Full Stack Developer
+    </p>
+    <button class="bg-blue-500 text-white px-8 py-3 rounded-lg">
+      Hire Me!
+    </button>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+   <!-- Navbar -->
+  <nav class="bg-blue-600 px-8 py-4 flex justify-between items-center mb-8 rounded-lg">
+    <h1 class="text-white text-2xl font-bold">Mateen.dev</h1>
+    <div class="flex gap-6">
+      <a class="text-white">Home</a>
+      <a class="text-white">Projects</a>
+      <a class="text-white">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Section Title -->
+  <h2 class="text-3xl font-bold text-center text-gray-700 mb-8">
+    My Projects
+  </h2>
+
+  <!-- 3 Cards Grid -->
+  <div class="grid grid-cols-3 gap-6">
+
+    <!-- Card 1 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-blue-600 mb-2">
+        Amazon Clone
+      </h3>
+      <p class="text-gray-500 mb-4">
+        HTML CSS se bana Amazon clone
+      </p>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+        View Project
+      </button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-green-600 mb-2">
+        Quiz App
+      </h3>
+      <p class="text-gray-500 mb-4">
+        JavaScript se bana quiz app
+      </p>
+      <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+        View Project
+      </button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-purple-600 mb-2">
+        Portfolio
+      </h3>
+      <p class="text-gray-500 mb-4">
+        Tailwind se bana portfolio
+      </p>
+      <button class="bg-purple-500 text-white px-4 py-2 rounded-lg">
+        View Project
+      </button>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+  <!-- Responsive Navbar -->
+  <nav class="bg-blue-600 px-6 py-4 flex justify-between items-center mb-8 rounded-lg">
+    <h1 class="text-white text-xl font-bold">Mateen.dev</h1>
+    <div class="hidden md:flex gap-6">
+      <a class="text-white">Home</a>
+      <a class="text-white">Projects</a>
+      <a class="text-white">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Responsive Heading -->
+  <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-gray-700 mb-8">
+    My Projects
+  </h2>
+
+  <!-- Responsive Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Card 1 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-blue-600 mb-2">Amazon Clone</h3>
+      <p class="text-gray-500 mb-4">HTML CSS se bana Amazon clone</p>
+      <button class="bg-blue-500 text-white px-4 py-2 rounded-lg w-full">
+        View Project
+      </button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-green-600 mb-2">Quiz App</h3>
+      <p class="text-gray-500 mb-4">JavaScript se bana quiz app</p>
+      <button class="bg-green-500 text-white px-4 py-2 rounded-lg w-full">
+        View Project
+      </button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h3 class="text-xl font-bold text-purple-600 mb-2">Portfolio</h3>
+      <p class="text-gray-500 mb-4">Tailwind se bana portfolio</p>
+      <button class="bg-purple-500 text-white px-4 py-2 rounded-lg w-full">
+        View Project
+      </button>
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+   <!-- Hover Button -->
+  <div class="flex gap-4 mb-8">
+
+
+    
+
+    <button class="bg-blue-500 hover:bg-blue-700
+                   text-white px-6 py-3 rounded-lg
+                   transition duration-300">
+      Hover Me!
+    </button>
+
+    <button class="bg-white hover:bg-gray-100
+                   text-blue-500 border border-blue-500
+                   px-6 py-3 rounded-lg transition duration-300">
+      Outline Button
+    </button>
+
+    <button class="bg-green-500 hover:scale-110
+                   text-white px-6 py-3 rounded-lg
+                   transition duration-300">
+      Scale Up!
+    </button>
+
+    <!-- Bina transition — abrupt change -->
+<button class="bg-blue-500 hover:bg-red-500 text-white px-6 py-3">
+  Abrupt!
+</button>
+
+<!-- Transition ke saath — smooth -->
+<button class="bg-blue-500 hover:bg-red-500 transition duration-300">
+  Smooth!
+</button>
+
+  </div>
+
+  <!-- Hover Card -->
+  <div class="bg-white p-6 rounded-xl shadow-md
+              hover:shadow-xl hover:-translate-y-2
+              transition duration-300 w-64">
+    <h3 class="text-xl font-bold text-blue-600 mb-2">
+      Project Card
+    </h3>
+    <p class="text-gray-500">
+      Hover karo — upar uthega!
+    </p>
+  </div>
+
+  <!-- Focus Input -->
+  <div class="mt-8">
+    <input
+      class="border border-gray-300 px-4 py-3 rounded-lg w-64
+             focus:outline-none focus:border-blue-500
+             focus:ring-2 focus:ring-blue-200 transition"
+      placeholder="Click karo mujhpe..."
+    />
+  </div>
+
+
+
+</body>
+</html>

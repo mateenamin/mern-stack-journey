@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Mode</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 transition duration-300 p-10">
+
+  <!-- Toggle Button -->
+  <div class="flex justify-end mb-8">
+    <button
+      onclick="toggleDark()"
+      class="bg-gray-200 dark:bg-gray-700
+             text-gray-800 dark:text-white
+             px-6 py-2 rounded-lg transition duration-300">
+      🌙 Dark Mode
+    </button>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="bg-white dark:bg-gray-800
+              px-6 py-4 rounded-xl shadow-md
+              flex justify-between items-center mb-8">
+    <h1 class="text-blue-600 dark:text-blue-400 text-xl font-bold">
+      Mateen.dev
+    </h1>
+    <div class="flex gap-6">
+      <a class="text-gray-600 dark:text-gray-300 hover:text-blue-500">Home</a>
+      <a class="text-gray-600 dark:text-gray-300 hover:text-blue-500">Projects</a>
+      <a class="text-gray-600 dark:text-gray-300 hover:text-blue-500">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <div class="bg-white dark:bg-gray-800
+                p-6 rounded-xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+        Amazon Clone
+      </h3>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
+        HTML CSS se bana project
+      </p>
+      <button class="bg-blue-500 hover:bg-blue-700
+                     text-white px-4 py-2 rounded-lg
+                     w-full transition duration-300">
+        View Project
+      </button>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800
+                p-6 rounded-xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-green-600 dark:text-green-400 mb-2">
+        Quiz App
+      </h3>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
+        JavaScript se bana project
+      </p>
+      <button class="bg-green-500 hover:bg-green-700
+                     text-white px-4 py-2 rounded-lg
+                     w-full transition duration-300">
+        View Project
+      </button>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800
+                p-6 rounded-xl shadow-md
+                hover:shadow-xl hover:-translate-y-1
+                transition duration-300">
+      <h3 class="text-xl font-bold text-purple-600 dark:text-purple-400 mb-2">
+        Portfolio
+      </h3>
+      <p class="text-gray-500 dark:text-gray-400 mb-4">
+        Tailwind se bana project
+      </p>
+      <button class="bg-purple-500 hover:bg-purple-700
+                     text-white px-4 py-2 rounded-lg
+                     w-full transition duration-300">
+        View Project
+      </button>
+    </div>
+
+  </div>
+
+</body>
+
+<script>
+  function toggleDark() {
+    document.documentElement.classList.toggle('dark');
+  }
+</script>
+</html>
