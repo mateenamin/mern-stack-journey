@@ -1,0 +1,296 @@
+
+React — Full Topics List:
+       
+#                      Topics
+
+11                    useContext
+12                   useReducer
+13                    useMemo + useCallback
+14                    Custom Hooks
+15                    React Router v6      
+16                  Axios + API Calls
+17                  Tailwind + React
+18                  Error Handling
+19                  Lifting State Up
+20                  Component Lifecycle
+
+
+
+
+Topic 11 — useContext 🎯
+
+Problem Kya Hai — Props Drilling:
+
+
+// ❌ Bura tarika — har jagah props pass karo
+function App() {
+  const user = "Mateen"
+  return <Parent user={user} />
+}
+
+function Parent({ user }) {
+  return <Child user={user} />
+}
+
+function Child({ user }) {
+  return <GrandChild user={user} />
+}
+
+function GrandChild({ user }) {
+  return <h1>Hello {user}!</h1> // yahan chahiye tha!
+}
+
+Sirf GrandChild ko chahiye tha — lekin har jagah se pass karna pada! ❌
+
+
+
+useContext — Solution:
+
+
+import { createContext, useContext } from "react"
+
+// Step 1 — Context banao
+const UserContext = createContext()
+
+function App() {
+  const user = "Mateen"
+
+  return (
+    // Step 2 — Provider se wrap karo
+    <UserContext.Provider value={user}>
+      <Parent />
+    </UserContext.Provider>
+  )
+}
+
+function Parent() {
+  return <Child /> // props pass nahi kiya!
+}
+
+function Child() {
+  return <GrandChild /> // props pass nahi kiya!
+}
+
+function GrandChild() {
+  // Step 3 — Seedha lo!
+  const user = useContext(UserContext)
+  return <h1>Hello {user}!</h1>
+}
+
+✅ Koi props drilling nahi — seedha access!
+
+
+
+
+Kyun Bahar Banate Hain:
+
+// ✅ Component ke BAHAR — file level pe
+const ThemeContext = createContext()
+
+function App() { ... }
+function Navbar() { ... }
+
+Kyun?
+
+Agar andar banao — har render pe naya context ban jayega!
+Bahar banao — ek baar banta hai — sab use karte hain!
+
+
+
+Simple Rule:
+createContext()   → File ke upar — ek baar
+Provider          → Parent component mein
+useContext()      → Jahan bhi chahiye — andar
+
+
+
+
+
+Topic 12   seReducer 🎯Kya Hai:
+
+useReducer = Complex state manage karna!
+
+Jab bahut saari states hon — useReducer better hai useState se!
+
+
+useState vs useReducer:
+                            useState                        useReducer
+
+
+ Simple state              ✅ Best                          Overkill
+ 
+ Complex state               Mushkil                           ✅ Best
+ 
+ Multiple updates            Messy                             Clean
+
+useReducer:
+
+✅ Sirf concept samjho — Gulf interview mein pooch sakte hain
+❌ Real projects mein akela useReducer zyada use nahi hota
+
+
+Bas Itna Yaad Rakho:
+
+useReducer = Complex state manage karna
+useState = Simple state manage karna
+
+
+Interview Mein Poochha Toh Bolo:
+
+"useReducer complex state manage karne ke liye use hota hai — 
+jaise Todo app ya Shopping cart jahan bahut saari states hon!"
+
+
+
+
+
+
+Topic 13 — useMemo + useCallback 🎯
+Problem Kya Hai:
+
+React har render pe sab kuch dobara calculate karta hai!
+Unnecessary kaam — slow hota hai!
+
+
+
+useMemo — Value Yaad Rakho:
+
+Expensive calculation dobara mat karo — result yaad rakho!
+
+
+import { useState, useMemo } from "react"
+
+function App() {
+  const [count, setCount] = useState(0)
+  const [name, setName] = useState("")
+
+  // ❌ Bina useMemo — har render pe calculate hoga
+  const expensiveValue = slowCalculation(count)
+
+  // ✅ useMemo — sirf count badle tab calculate karo
+  const expensiveValue = useMemo(() => {
+    return slowCalculation(count)
+  }, [count]) // sirf count change hone pe
+
+  return (
+    <div>
+      <h2>Value: {expensiveValue}</h2>
+      <button onClick={() => setCount(count + 1)}>Count+</button>
+      <input onChange={(e) => setName(e.target.value)} />
+    </div>
+  )
+}
+
+
+
+Name type karo — calculation dobara nahi hogi! ✅
+Count badle — tab hogi! ✅
+
+
+
+useCallback — Function Yaad Rakho:
+
+Function dobara mat banao — yaad rakho!
+
+
+import { useState, useCallback } from "react"
+
+function App() {
+  const [count, setCount] = useState(0)
+  const [name, setName] = useState("")
+
+  // ❌ Bina useCallback — har render pe naya function banta hai
+  const handleClick = () => {
+    console.log("Clicked!", count)
+  }
+
+  // ✅ useCallback — sirf count badle tab naya function bane
+  const handleClick = useCallback(() => {
+    console.log("Clicked!", count)
+  }, [count])
+
+  return (
+    <div>
+      <button onClick={handleClick}>Click!</button>
+      <button onClick={() => setCount(count + 1)}>Count+</button>
+      <input onChange={(e) => setName(e.target.value)} />
+    </div>
+  )
+}
+
+
+
+Simple Farq:
+
+
+Hook                            Kya Yaad Rakhta Hai
+
+useMemo                        Value yaad rakhta hai
+
+useCallback                    Function yaad rakhta hai
+
+
+
+Custom Hook — Simple! 🎯
+Bas 3 Steps:
+1 — hooks folder banao — file banao useCounter.js:
+
+
+import { useState } from "react"
+
+function useCounter() {
+  const [count, setCount] = useState(0)
+
+  const increment = () => setCount(count + 1)
+  const decrement = () => setCount(count - 1)
+
+  return { count, increment, decrement }
+}
+
+export default useCounter
+
+
+
+App.jsx mein import karo:
+
+
+
+
+
+import useCounter from "./hooks/useCounter"
+
+function App() {
+  const { count, increment, decrement } = useCounter()
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+    </div>
+  )
+}
+
+export default App
+
+
+Bas Itna! 3 Rules:
+
+✅ use se naam shuru karo
+✅ Andar hooks use karo
+✅ Jo chahiye return karo
+
+
+
+Ek Line Mein:
+
+Custom Hook = Logic alag file mein likho — return karo — kahin bhi use karo!
+
+
+Fayda:
+
+❌ Bina Custom Hook — har component mein same logic likho
+✅ Custom Hook — ek baar likho — 10 jagah use karo!
+
+
+
