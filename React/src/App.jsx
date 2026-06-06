@@ -10,6 +10,11 @@ import LiftingStateUp from "./component/LiftingStateUp"
 import AnimationsTransformsTailwind from "./component/AnimationsTransformsTailwind"
 import OpacityCursorOverflow from "./component/OpacityCursorOverflow"
 
+
+import ZustandBasic from "./component/ZustandBasic"
+
+
+
 function App() {
   let name = "Mateen Amin"
   let role = "Full Stack Developer"
@@ -42,6 +47,9 @@ function App() {
     <AnimationsTransformsTailwind/>
     <OpacityCursorOverflow/>
     
+
+
+    <ZustandBasic />
     </>
   )
 }
