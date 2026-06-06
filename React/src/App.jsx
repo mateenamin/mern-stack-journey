@@ -12,6 +12,8 @@ import OpacityCursorOverflow from "./component/OpacityCursorOverflow"
 
 
 import ZustandBasic from "./component/ZustandBasic"
+import ReduxCounter from "./component/ReduxCounter"
+     
 
 
 
@@ -50,6 +52,8 @@ function App() {
 
 
     <ZustandBasic />
+    <ReduxCounter />
+
     </>
   )
 }
