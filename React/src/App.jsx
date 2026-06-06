@@ -5,6 +5,10 @@ import ConditionalRendering from"./component/ConditionalRendering"
 import ListsAndKeys from "./component/ListsAndKeys"
 import UseContext from "./component/UseContext"
 import UseMemoUseCallback from "./component/UseMemoUseCallback"
+import AxiosAPICalls from "./component/AxiosAPICalls "
+import LiftingStateUp from "./component/LiftingStateUp"
+import AnimationsTransformsTailwind from "./component/AnimationsTransformsTailwind"
+import OpacityCursorOverflow from "./component/OpacityCursorOverflow"
 
 function App() {
   let name = "Mateen Amin"
@@ -29,6 +33,15 @@ function App() {
       <ListsAndKeys/>
       <UseContext/>
       <UseMemoUseCallback/>
+      <AxiosAPICalls/>
+      <LiftingStateUp/>
+
+      <div className="bg-blue-500 text-white p-10 text-3xl font-bold">
+      Tailwind React mein kaam kar raha hai! ✅
+    </div>
+    <AnimationsTransformsTailwind/>
+    <OpacityCursorOverflow/>
+    
     </>
   )
 }
