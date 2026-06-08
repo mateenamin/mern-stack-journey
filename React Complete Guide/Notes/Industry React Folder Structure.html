@@ -1,0 +1,50 @@
+src/
+├── assets/          → images, fonts, icons
+├── components/      → reusable UI pieces
+│   ├── ui/          → Button, Input, Modal
+│   └── layout/      → Navbar, Footer, Sidebar
+├── pages/           → har page ka component
+├── hooks/           → custom hooks
+├── services/        → API calls (axios)
+├── store/           → Redux slices
+├── utils/           → helper functions
+├── context/         → React Context
+└── constants/       → fixed values
+
+
+
+Har folder ka kaam:
+
+components/ → Reusable cheezein
+Button.jsx — har jagah use hota hai
+Modal.jsx  — har jagah use hota hai
+pages/ → Sirf pages
+Home.jsx
+Dashboard.jsx
+hooks/ → Custom hooks
+useAuth.js
+useLocalStorage.js
+services/ → Sirf API calls
+authService.js    → login, signup API
+productService.js → products API
+store/ → Redux
+store.js
+cartSlice.js
+utils/ → Helper functions
+formatPrice.js  → $1000 → $1,000.00
+formatDate.js   → date format
+constants/ → Fixed values
+API_URL = 'https://...'
+MAX_CART_ITEMS = 10
+
+Konse pehle banate hain?
+1. assets/      → pehle — images chahiye hongi
+2. constants/   → API URLs fix karo
+3. services/    → API calls likhо
+4. store/       → Redux setup
+5. hooks/       → custom hooks
+6. components/  → UI banao
+7. pages/       → pages banao
+8. utils/       → helpers baad mein
+
+

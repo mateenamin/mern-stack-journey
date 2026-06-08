@@ -1,0 +1,1430 @@
+
+React — Full Topics List:
+       
+#                      Topics
+
+11            State Management( useContext,Redux Toolkit, Zustand)
+12                   useReducer
+13                    useMemo + useCallback
+14                    Custom Hooks
+15                    React Router v6      
+16         Data Fetching (Axios + API Calls, RTK Query, React Query)
+17                  Tailwind + React
+18                  Error Handling
+19                  Lifting State Up
+20                  Component Lifecycle
+
+
+Real Life Analogy
+
+useState → Chhota purse (roz ka chhota samaan)
+useReducer → Thoda bada bag (complex samaan)
+useContext + useReducer → Ghar ka ek almari
+Zustand → Modern stylish cupboard (easy aur powerful)
+Redux Toolkit → Bada godown (factory level)
+
+Topic 11 — useContext 🎯
+
+Problem Kya Hai — Props Drilling:
+
+
+// ❌ Bura tarika — har jagah props pass karo
+function App() {
+  const user = "Mateen"
+  return <Parent user={user} />
+}
+
+function Parent({ user }) {
+  return <Child user={user} />
+}
+
+function Child({ user }) {
+  return <GrandChild user={user} />
+}
+
+function GrandChild({ user }) {
+  return <h1>Hello {user}!</h1> // yahan chahiye tha!
+}
+
+Sirf GrandChild ko chahiye tha — lekin har jagah se pass karna pada! ❌
+
+
+
+useContext — Solution:
+
+
+import { createContext, useContext } from "react"
+
+// Step 1 — Context banao
+const UserContext = createContext()
+
+function App() {
+  const user = "Mateen"
+
+  return (
+    // Step 2 — Provider se wrap karo
+    <UserContext.Provider value={user}>
+      <Parent />
+    </UserContext.Provider>
+  )
+}
+
+function Parent() {
+  return <Child /> // props pass nahi kiya!
+}
+
+function Child() {
+  return <GrandChild /> // props pass nahi kiya!
+}
+
+function GrandChild() {
+  // Step 3 — Seedha lo!
+  const user = useContext(UserContext)
+  return <h1>Hello {user}!</h1>
+}
+
+✅ Koi props drilling nahi — seedha access!
+
+
+
+
+Kyun Bahar Banate Hain:
+
+// ✅ Component ke BAHAR — file level pe
+const ThemeContext = createContext()
+
+function App() { ... }
+function Navbar() { ... }
+
+Kyun?
+
+Agar andar banao — har render pe naya context ban jayega!
+Bahar banao — ek baar banta hai — sab use karte hain!
+
+
+
+Simple Rule:
+createContext()   → File ke upar — ek baar
+Provider          → Parent component mein
+useContext()      → Jahan bhi chahiye — andar
+
+
+
+
+
+Topic 12   seReducer 🎯Kya Hai:
+
+useReducer = Complex state manage karna!
+
+Jab bahut saari states hon — useReducer better hai useState se!
+
+
+useState vs useReducer:
+                            useState                        useReducer
+
+
+ Simple state              ✅ Best                          Overkill
+ 
+ Complex state               Mushkil                           ✅ Best
+ 
+ Multiple updates            Messy                             Clean
+
+useReducer:
+
+✅ Sirf concept samjho — Gulf interview mein pooch sakte hain
+❌ Real projects mein akela useReducer zyada use nahi hota
+
+
+Bas Itna Yaad Rakho:
+
+useReducer = Complex state manage karna
+useState = Simple state manage karna
+
+
+Interview Mein Poochha Toh Bolo:
+
+"useReducer complex state manage karne ke liye use hota hai — 
+jaise Todo app ya Shopping cart jahan bahut saari states hon!"
+
+
+
+
+
+Zustand 🎯
+Kya Hai:
+
+Zustand = Simple state management!
+useState jaisa — lekin poori app mein use kar sakte ho!
+
+
+useState vs Zustand:
+
+// useState — sirf ek component mein
+const [count, setCount] = useState(0)
+
+// Zustand — poori app mein!
+
+const count = useStore(state => state.count)
+
+
+Zustand Ka Simple Rule:
+create()     → Store banao
+set()        → State update karo
+useStore()   → Component mein use karo
+
+
+Zustand — Ekdum Simple:
+Store Kya Hai:
+
+Store = Ek jagah jahan sab ka data rakho! Koi bhi component yahan se data le sakta hai!
+
+
+
+
+3 Cheezein Samjho:
+
+
+
+import { create } from "zustand"
+
+const useStore = create((set) => ({
+
+  // 1 — STATE — data yahan rakho
+  count: 0,
+  name: "Mateen",
+
+  // 2 — ACTIONS — data kaise badlein
+  increment: () => set(state => ({
+    count: state.count + 1
+  })),
+
+  // 3 — set() — state update karta hai
+  changeName: (newName) => set({
+    name: newName
+  }),
+
+}))
+
+
+
+
+set() Kaise Kaam Karta Hai:
+
+
+
+// Purani value chahiye — arrow function use karo
+increment: () => set(state => ({
+  count: state.count + 1  // state.count = purani value
+}))
+
+// Purani value nahi chahiye — seedha likho
+reset: () => set({ count: 0 })
+
+// Multiple values update karo
+update: () => set(state => ({
+  count: state.count + 1,
+  name: "Ali"
+}))
+
+
+
+Component mein use karo:
+
+
+
+function App() {
+  // Sab lo
+  const { count, name, increment } = useStore()
+
+  // Ya sirf ek lo
+  const count = useStore(state => state.count)
+
+  return (
+    <div>
+      <h1>{count}</h1>
+      <button onClick={increment}>+</button>
+    </div>
+  )
+}
+
+
+
+Zustand Full Roadmap:
+
+#                          Topic
+
+1                       Basic Store — State + Actions
+
+2                          Multiple Stores
+
+3                         Async Actions — API call
+
+4                        Persist — localStorage mein save
+
+5                        Auth Store — Real use case
+
+6                        Cart Store — E-commerce
+
+
+Topic 1 — Basic Store 🎯
+
+Pehle Samjho — 3 Parts:
+STATE   = Data rakho
+ACTIONS = Data kaise badlo
+set()   = State update karo
+
+
+Topic 2 — Multiple Stores 🎯
+Kya Hai:
+
+Alag alag stores banao — har cheez ke liye!
+Ek store mein sab mat rakho — organize karo!
+
+Kyun Multiple Stores:
+❌ Ek store mein sab
+useStore = { count, user, cart, theme, posts... }
+
+✅ Alag alag stores
+useCounterStore = { count }
+useAuthStore    = { user, isLoggedIn }
+useCartStore    = { items, total }
+useThemeStore   = { isDark }
+
+
+
+Topic 3 — Async Actions 🎯Kya Hai:
+
+Store mein API call karna!
+Data fetch karo — store mein save karo — kahin bhi use karo!
+
+
+Yaad Rakho:
+
+                                Kaam
+
+set({ loading: true })         Loading start
+
+await axios.get()               Data fetch karo
+
+set({ posts: data })             Data store mein save
+
+set({ error: err.message })         Error save karo
+
+
+Topic 4 — Persist 🎯Kya Hai:
+
+Page reload karo — data abhi bhi rahega!
+Zustand data localStorage mein save karta hai!
+
+Problem Bina Persist:
+Counter = 10
+Page reload karo
+Counter = 0 ← Reset ho gaya! ❌
+
+
+Persist ke saath:
+
+Counter = 10
+Page reload karo
+Counter = 10 ← Abhi bhi hai! ✅
+
+Farq:
+Kya HaiMiddlewareBeech mein kaam karne ka conceptPersistEk specific middleware — localStorage save karta hai
+
+Simple Example:
+Middleware = Concept hai
+Persist    = Us concept ka ek use case hai
+
+Real Life:
+
+Middleware = Security guard — beech mein check karta hai
+Persist = Ek specific guard — jo sirf data save karta hai
+
+
+Ek Line Mein:
+
+✅ Persist ek middleware hai
+✅ Lekin har middleware persist nahi hota!
+
+
+
+Auth + Cart — Persist ka real example tha! ✅
+
+
+
+
+
+Redux Toolkit 🎯
+
+
+Redux Toolkit — Full Topics:
+
+#                            Topic
+
+1                             Setup — Store + Provider
+
+2                             Slice — State + Actions
+
+3                              useSelector + useDispatch 
+
+4                              Async — createAsyncThunk
+
+5                                   Multiple Slices
+Kya Hai:
+
+Redux Toolkit = Redux ka easy version!
+Bade projects mein use hota hai — Gulf companies zyada use karti hain!
+
+
+Zustand vs Redux Toolkit:
+
+                         Zust                        ReduxToolkit
+
+Complexity             Simple ⭐                      Thoda complex
+
+Code                    Kam                              Zyada
+
+Large Projects          Theek                          ✅ Best
+
+Gulf Jobs                Growing⭐                    Zyada demand
+
+Redux Toolkit — Folder Structure 🎯
+
+src/
+├── redux/
+│   ├── store.js          ← Ek store — sab slices yahan
+│   ├── counterSlice.js   ← Counter ka data
+│   ├── authSlice.js      ← Login ka data
+│   └── cartSlice.js      ← Cart ka data
+│
+├── component/
+│   └── ReduxCounter.jsx  ← Component — useSelector/useDispatch
+│
+└── main.jsx              ← Provider yahan
+
+
+Har File Kya Karta Hai:
+store.js — Sab slices ek jagah:
+
+counterSlice.js — Ek feature:
+main.jsx — Provider:
+Component — Use karo:
+
+
+Simple Rule:
+Slice    → Ek feature ka data
+Store    → Sab slices ek jagah
+Provider → App ko store do
+Component → useSelector + useDispatch
+
+
+
+
+
+
+Topic 1 — Setup — Store + Provider 🎯
+
+
+Redux Toolkit — 3 Main Cheezein:
+
+Store    = Ek jagah sab ka data
+Slice    = Ek feature ka data + actions
+Provider = Poori app ko store dena
+
+
+Topic 2 — Slice — State + Actions 🎯
+
+
+Slice Kya Hai:
+
+Slice = Ek feature ka poora data + actions!
+Counter ka alag slice — Auth ka alag slice!
+
+
+
+Slice ke 3 Parts:
+
+
+createSlice({
+  name: "naam",          // 1 — Slice ka naam
+  initialState: {},      // 2 — Shuru ki value
+  reducers: {}           // 3 — Actions — state kaise badle
+})
+
+
+
+useSelector — Deep Samjho:
+
+
+import { useSelector } from "react-redux"
+
+// Poora state lo
+const counter = useSelector(state => state.counter)
+
+// Sirf ek value lo
+const count = useSelector(state => state.counter.count)
+
+// Multiple values lo
+const { count } = useSelector(state => state.counter)
+const { users, selectedUser } = useSelector(state => state.user)
+
+// Condition se lo
+const loggedInUsers = useSelector(state =>
+  state.user.users.filter(u => u.isActive)
+)
+
+
+useDispatch — Deep Samjho:
+
+
+import { useDispatch } from "react-redux"
+import { increment, addUser } from "../redux/slice"
+
+const dispatch = useDispatch()
+
+// Simple action
+dispatch(increment())
+
+// Payload ke saath
+dispatch(addUser({ id: 1, name: "Mateen" }))
+
+// Button pe
+<button onClick={() => dispatch(increment())}>+</button>
+
+// Function mein
+const handleAdd = () => {
+  dispatch(addUser({ id: Date.now(), name }))
+}
+
+
+Topic 4 — createAsyncThunk 🎯Kya Hai:
+
+Redux mein API call karna!
+Async kaam ke liye — createAsyncThunk use karte hain!
+
+
+Zustand vs Redux Async:
+
+
+// Zustand — simple
+fetchPosts: async () => {
+  const { data } = await axios.get("/posts")
+  set({ posts: data })
+}
+
+// Redux — createAsyncThunk
+export const fetchPosts = createAsyncThunk(
+  "posts/fetchAll",
+  async () => {
+    const { data } = await axios.get("/posts")
+    return data
+  }
+)
+
+Redux Toolkit = 3 Kaam:
+1. SLICE   → Feature ka data + actions
+2. STORE   → Sab slices ek jagah
+3. COMPONENT → useSelector + useDispatch
+
+
+Flow:
+
+Slice banao
+    ↓
+Store mein add karo
+    ↓
+Component mein use karo
+
+
+Example:
+
+counterSlice.js  → count, increment, decrement
+      ↓
+store.js         → counter: counterReducer
+      ↓
+ReduxCounter.jsx → useSelector + useDispatc
+
+
+
+Zustand vs Redux:
+
+                   Zustand                        Redux
+
+Step 1              Store banao                Slice banao
+
+Step 2             Component mein use karo     Store mein add karo
+
+
+Step 3              —---                       Component mein use karo
+
+
+Topic 5 — Multiple Slices 🎯
+Kya Hai:
+
+Har feature ka alag slice — sab store mein!
+
+
+
+
+Topic 13 — useMemo + useCallback 🎯
+Problem Kya Hai:
+
+React har render pe sab kuch dobara calculate karta hai!
+Unnecessary kaam — slow hota hai!
+
+
+
+useMemo — Value Yaad Rakho:
+
+Expensive calculation dobara mat karo — result yaad rakho!
+
+
+import { useState, useMemo } from "react"
+
+function App() {
+  const [count, setCount] = useState(0)
+  const [name, setName] = useState("")
+
+  // ❌ Bina useMemo — har render pe calculate hoga
+  const expensiveValue = slowCalculation(count)
+
+  // ✅ useMemo — sirf count badle tab calculate karo
+  const expensiveValue = useMemo(() => {
+    return slowCalculation(count)
+  }, [count]) // sirf count change hone pe
+
+  return (
+    <div>
+      <h2>Value: {expensiveValue}</h2>
+      <button onClick={() => setCount(count + 1)}>Count+</button>
+      <input onChange={(e) => setName(e.target.value)} />
+    </div>
+  )
+}
+
+
+
+Name type karo — calculation dobara nahi hogi! ✅
+Count badle — tab hogi! ✅
+
+
+
+useCallback — Function Yaad Rakho:
+
+Function dobara mat banao — yaad rakho!
+
+
+import { useState, useCallback } from "react"
+
+function App() {
+  const [count, setCount] = useState(0)
+  const [name, setName] = useState("")
+
+  // ❌ Bina useCallback — har render pe naya function banta hai
+  const handleClick = () => {
+    console.log("Clicked!", count)
+  }
+
+  // ✅ useCallback — sirf count badle tab naya function bane
+  const handleClick = useCallback(() => {
+    console.log("Clicked!", count)
+  }, [count])
+
+  return (
+    <div>
+      <button onClick={handleClick}>Click!</button>
+      <button onClick={() => setCount(count + 1)}>Count+</button>
+      <input onChange={(e) => setName(e.target.value)} />
+    </div>
+  )
+}
+
+
+
+Simple Farq:
+
+
+Hook                            Kya Yaad Rakhta Hai
+
+useMemo                        Value yaad rakhta hai
+
+useCallback                    Function yaad rakhta hai
+
+
+
+Custom Hook — Simple! 🎯
+Bas 3 Steps:
+1 — hooks folder banao — file banao useCounter.js:
+
+
+import { useState } from "react"
+
+function useCounter() {
+  const [count, setCount] = useState(0)
+
+  const increment = () => setCount(count + 1)
+  const decrement = () => setCount(count - 1)
+
+  return { count, increment, decrement }
+}
+
+export default useCounter
+
+
+
+App.jsx mein import karo:
+
+
+
+
+
+import useCounter from "./hooks/useCounter"
+
+function App() {
+  const { count, increment, decrement } = useCounter()
+
+  return (
+    <div>
+      <h1>Count: {count}</h1>
+      <button onClick={increment}>+</button>
+      <button onClick={decrement}>-</button>
+    </div>
+  )
+}
+
+export default App
+
+
+Bas Itna! 3 Rules:
+
+✅ use se naam shuru karo
+✅ Andar hooks use karo
+✅ Jo chahiye return karo
+
+
+
+Ek Line Mein:
+
+Custom Hook = Logic alag file mein likho — return karo — kahin bhi use karo!
+
+
+Fayda:
+
+❌ Bina Custom Hook — har component mein same logic likho
+✅ Custom Hook — ek baar likho — 10 jagah use karo!
+
+
+
+
+
+
+
+
+Topic 16 — Axios + API Calls 🎯
+Axios Kya Hai:
+
+Fetch ka better version!
+API calls karna — data lana ya bhejna!
+
+
+Install Karo:
+npm install axios
+
+
+
+
+Fetch vs Axios:
+
+// ❌ Fetch — zyada code
+const res = await fetch("https://api.com/users")
+const data = await res.json() // extra step!
+
+// ✅ Axios — clean!
+const { data } = await axios.get("https://api.com/users")
+// automatically JSON parse karta hai!
+
+
+
+Basic Example:
+
+import axios from "axios"
+import { useState, useEffect } from "react"
+
+function App() {
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const { data } = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        )
+        setUsers(data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    getUsers()
+  }, [])
+
+  if (loading) return <h2>Loading... ⏳</h2>
+  if (error) return <h2>Error: {error} ❌</h2>
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h1>Users</h1>
+      {users.map(user => (
+        <div key={user.id} style={{
+          background: "white",
+          padding: "12px",
+          marginBottom: "8px",
+          borderRadius: "8px"
+        }}>
+          <h3>{user.name}</h3>
+          <p>{user.email}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export default App
+
+
+
+
+Sab HTTP Methods:
+
+
+
+// GET — Data lao
+const { data } = await axios.get("/users")
+
+// POST — Data bhejo
+const { data } = await axios.post("/users", {
+  name: "Mateen",
+  email: "mateen@gmail.com"
+})
+
+// PUT — Pura update karo
+const { data } = await axios.put("/users/1", {
+  name: "Mateen Updated"
+})
+
+// DELETE — Delete karo
+await axios.delete("/users/1")
+
+
+
+
+
+
+Yaad Rakho:
+
+
+                           Kaam
+
+axios.get(url)              Data lao
+
+axios.post(url, data)       Data bhejo
+
+axios.put(url, data)        Update karo
+
+axios.delete(url)           Delete karo
+
+{ data }                    Response se data nikalo
+
+
+
+
+
+RTK Query 🎯
+
+Kya Hai:
+
+RTK Query = Redux Toolkit ka built-in data fetching tool!
+Axios + useEffect + loading/error state — sab automatic!
+
+Kyun RTK Query:
+
+                 Axios + useEffect                            RTK Query
+
+Loading state      Khud likh                                    وAutomatic ✅
+
+Error state          Khud likhو                                Automatic ✅
+
+Caching               Nahi                                         ✅
+
+Code                 Zyada                                        Kam ✅
+
+
+Install:
+
+Already installed hai — Redux Toolkit mein built-in! ✅
+
+
+RTK Query — Topics:
+
+#                Topic
+
+1              Setup — createApi
+
+2                 Queries — GET
+
+3               Mutations — POST/DELETE
+
+4                Cache + Invalidation
+
+
+
+Topic 1 — Setup — createApi 🎯3 Parts:
+
+
+
+createApi   → API define karo
+fetchBaseQuery → Base URL set karo
+endpoints   → Kaunse API calls karni hain
+
+
+
+
+Topic 18 — Error Handling 🎯
+
+Kya Hai:
+
+React mein errors pakadna aur user ko batana!
+
+
+
+2 Tarike:
+
+
+1 — try/catch — Async errors:
+
+
+const getData = async () => {
+  try {
+    const { data } = await axios.get("/api/users")
+    setUsers(data)
+  } catch (err) {
+    setError(err.message) // error state mein save karo
+  } finally {
+    setLoading(false)
+  }
+}
+
+
+2 — Error Boundary — Component errors:
+
+
+import { Component } from "react"
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: "30px", textAlign: "center" }}>
+          <h2>❌ Kuch ghalat hua!</h2>
+          <button onClick={() => this.setState({ hasError: false })}>
+            Dobara Try Karo
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
+export default ErrorBoundary
+
+
+// App.jsx mein use karo
+import ErrorBoundary from "./components/ErrorBoundary"
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <MyComponent />
+    </ErrorBoundary>
+  )
+}
+
+
+
+3 States Hamesha Rakho:
+
+
+State                  Kaam
+
+loading               Data aa raha hai
+
+error                 Kuch ghalat hua
+
+data                  Data aa gaya
+
+
+
+
+Topic 19 — Lifting State Up 🎯
+Kya Hai:
+
+2 components ko same data chahiye — state parent mein rakho!
+
+
+Problem:
+
+
+// ❌ Dono components ka alag state — sync nahi!
+function ComponentA() {
+  const [count, setCount] = useState(0) // alag
+}
+function ComponentB() {
+  const [count, setCount] = useState(0) // alag
+}
+
+
+
+
+
+Solution — State Upar Uthao:
+
+
+
+// ✅ Parent mein state — dono ko props se do!
+function App() {
+  const [count, setCount] = useState(0) // ek jagah!
+
+  return (
+    <>
+      <ComponentA count={count} setCount={setCount} />
+      <ComponentB count={count} />
+    </>
+  )
+}
+
+function ComponentA({ count, setCount }) {
+  return (
+    <div>
+      <h2>Component A — Count: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>+</button>
+    </div>
+  )
+}
+
+function ComponentB({ count }) {
+  return (
+    <div>
+      <h2>Component B — Same Count: {count}</h2>
+    </div>
+  )
+}
+
+Simple Rule:
+
+✅ 2 ya zyada components ko same data chahiye
+✅ State parent mein rakho
+✅ Props se children ko do
+
+
+
+
+
+
+
+
+Topic 20 — Component Lifecycle 🎯
+
+
+
+
+
+Kya Hai:
+
+Component ki zindagi — 3 stages!
+
+
+3 Stages:
+
+1. Mount    → Component screen pe aaya
+2. Update   → State/Props change hui
+3. Unmount  → Component screen se gaya
+
+
+useEffect se Lifecycle:
+
+
+
+import { useState, useEffect } from "react"
+
+function App() {
+  const [count, setCount] = useState(0)
+
+  // 1 — MOUNT — sirf ek baar
+  useEffect(() => {
+    console.log("Component Mount hua! ✅")
+    // API call yahan karo
+  }, [])
+
+  // 2 — UPDATE — count badle tab
+  useEffect(() => {
+    console.log("Count update hua:", count)
+  }, [count])
+
+  // 3 — UNMOUNT — cleanup
+  useEffect(() => {
+    console.log("Mount hua!")
+
+    return () => {
+      console.log("Unmount hua! 🗑️")
+      // Timer band karo, listener hatao
+    }
+  }, [])
+
+  return (
+    <div style={{ padding: "30px" }}>
+      <h2>Count: {count}</h2>
+      <button onClick={() => setCount(count + 1)}>+</button>
+    </div>
+  )
+}
+
+Lifecycle Table:
+
+Stage                useEffect                      Kab
+
+
+Mount             useEffect(() => {}, [])         Pehli baar
+
+Update            useEffect(() => {}, [value])    Value change pe 
+
+Unmount            return () => {}                Component hatne pe
+
+
+
+
+
+Ek Line Mein:
+
+Mount = Paida hua
+Update = Badla
+Unmount = Khatam hua
+
+
+Bas Itna Yaad Rakho:
+
+Interview mein poochhen — "Component Lifecycle kya hai?"
+Tum bolo — "3 stages hain — Mount, Update, Unmount — useEffect se handle karte hain!"
+
+
+✅ Concept alag hai — naam alag hai
+✅ Implementation same hai — useEffect!
+
+
+
+
+Tailwind + React — Jo Miss Hua:
+
+
+#                     Topic
+
+1                    Tailwind Setup in React (Vite)
+
+2                     Dark Mode
+
+3                     Custom Config
+
+4                      Animations
+
+5                      Transforms
+
+6                      Opacity + Cursor + Overflow
+
+
+
+
+Custom Config : 
+
+
+export default {
+  content: ["./index.html", "./src/**/*.{js,jsx}"],
+  darkMode: 'class',
+  theme: {
+    extend: {
+      colors: {
+        'brand': '#6366F1',
+        'brand-dark': '#4F46E5',
+        'brand-light': '#EEF2FF',
+        'gold': '#c9a84c',
+      },
+      fontFamily: {
+        'poppins': ['Poppins', 'sans-serif'],
+      }
+    }
+  },
+  plugins: [],
+}
+
+
+
+
+Dark Mode — React + Tailwind 🎯
+Kaise Kaam Karta Hai:
+
+HTML pe dark class lagao — sab dark ho jayega!
+
+
+// HTML pe dark class toggle karo
+document.documentElement.classList.add('dark')    // Dark on
+document.documentElement.classList.remove('dark') // Dark off
+document.documentElement.classList.toggle('dark') // Toggle
+
+
+
+useState se Dark Mode:
+
+import { useState } from "react"
+
+function App() {
+  const [isDark, setIsDark] = useState(false)
+
+  const toggleDark = () => {
+    setIsDark(!isDark)
+    document.documentElement.classList.toggle('dark')
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-900 min-h-screen transition duration-300">
+
+      <div className="p-10">
+        <h1 className="text-gray-900 dark:text-white text-4xl font-bold mb-4">
+          Hello Mateen!
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mb-8">
+          Dark mode test kar rahe hain!
+        </p>
+
+        <button
+          onClick={toggleDark}
+          className="bg-gray-200 dark:bg-gray-700
+                     text-gray-900 dark:text-white
+                     px-6 py-3 rounded-xl
+                     transition duration-300">
+          {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+        </button>
+      </div>
+
+    </div>
+  )
+}
+
+
+localStorage se Yaad Rakho:
+
+import { useState, useEffect } from "react"
+
+function App() {
+  // localStorage se check karo — pehle se dark tha?
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("theme") === "dark"
+  })
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem("theme", "dark")
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem("theme", "light")
+    }
+  }, [isDark])
+
+  return (
+    <div className="bg-white dark:bg-gray-900 min-h-screen transition duration-300 p-10">
+
+      <h1 className="text-gray-900 dark:text-white text-4xl font-bold mb-4">
+        Mateen.dev
+      </h1>
+
+      <p className="text-gray-500 dark:text-gray-400 mb-6">
+        Page reload karo — dark mode yaad rahega! ✅
+      </p>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl">
+          <h3 className="text-gray-900 dark:text-white font-bold mb-2">Card 1</h3>
+          <p className="text-gray-500 dark:text-gray-400">Yeh card dark mode mein badle ga!</p>
+        </div>
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl">
+          <h3 className="text-gray-900 dark:text-white font-bold mb-2">Card 2</h3>
+          <p className="text-gray-500 dark:text-gray-400">Yeh bhi badle ga!</p>
+        </div>
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl">
+          <h3 className="text-gray-900 dark:text-white font-bold mb-2">Card 3</h3>
+          <p className="text-gray-500 dark:text-gray-400">Yeh bhi!</p>
+        </div>
+      </div>
+
+      {/* Toggle Button */}
+      <button
+        onClick={() => setIsDark(!isDark)}
+        className="bg-brand hover:bg-brand-dark text-white
+                   px-8 py-3 rounded-xl font-semibold
+                   transition duration-300">
+        {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
+
+    </div>
+  )
+}
+
+export default App
+
+
+
+
+
+Dark Mode Classes:
+
+Light                                Dark
+
+bg-white                           dark:bg-gray-900
+
+bg-gray-100                        dark:bg-gray-800
+
+text-gray-900                     dark:text-white
+
+text-gray-500                      dark:text-gray-400
+
+border-gray-200                   dark:border-gray-700
+
+Yaad Rakho:
+
+✅ darkMode: 'class' — config mein zaroori
+✅ dark: prefix — dark mode mein yeh class
+✅ localStorage — page reload pe yaad rahe
+✅ transition duration-300 — smooth change
+
+
+
+
+
+Animations + Transforms 🎯
+
+Transforms — Element ko badlo:
+
+<div className="hover:scale-110 transition duration-300">
+  Bada ho jaunga!
+</div>
+
+<div className="hover:-translate-y-2 transition duration-300">
+  Upar uthega!
+</div>
+
+<div className="hover:rotate-12 transition duration-300">
+  Ghoom jaunga!
+</div>
+
+Sab Transform Classes:
+
+{/* Scale */}
+<div className="hover:scale-105">Thoda bada</div>
+<div className="hover:scale-110">Zyada bada</div>
+<div className="hover:scale-75">Chota</div>
+
+{/* Translate */}
+<div className="hover:-translate-y-2">Upar</div>
+<div className="hover:translate-y-2">Neeche</div>
+<div className="hover:translate-x-2">Right</div>
+<div className="hover:-translate-x-2">Left</div>
+
+{/* Rotate */}
+<div className="hover:rotate-45">45 degree</div>
+<div className="hover:-rotate-12">-12 degree</div>
+<div className="hover:rotate-180">Ulta!</div>
+
+
+
+
+Animations — Built-in:
+
+
+{/* Spin */}
+<div className="animate-spin">⚙️</div>
+
+{/* Ping — notification dot */}
+<div className="animate-ping bg-red-500 w-4 h-4 rounded-full"></div>
+
+{/* Pulse — loading */}
+<div className="animate-pulse bg-gray-200 h-4 rounded"></div>
+
+{/* Bounce */}
+<div className="animate-bounce">⬇️</div>
+
+
+
+Opacity + Cursor + Overflow 🎯
+
+
+Opacity:
+
+<div className="opacity-100">100% visible</div>
+<div className="opacity-75">75% visible</div>
+<div className="opacity-50">50% visible</div>
+<div className="opacity-25">25% visible</div>
+<div className="opacity-0">Bilkul nahi dikh raha!</div>
+
+{/* Hover pe opacity change */}
+<div className="opacity-50 hover:opacity-100 transition duration-300">
+  Hover karo — poora dikh jaunga!
+</div>
+
+{/* Background opacity */}
+<div className="bg-blue-500/50">50% transparent background</div>
+<div className="bg-blue-500/75">75% background</div>
+
+
+Cursor:
+
+<button className="cursor-pointer">Normal pointer</button>
+<button className="cursor-not-allowed opacity-50">Disabled</button>
+<div className="cursor-grab">Grab karo!</div>
+<div className="cursor-zoom-in">Zoom in</div>
+<div className="cursor-crosshair">Crosshair</div>
+<div className="cursor-text">Text cursor</div>
+
+
+Overflow:
+
+{/* Hidden — bahar nahi jayega */}
+<div className="overflow-hidden w-32 h-32">
+  Bahut lamba content — bahar nahi jayega!
+</div>
+
+{/* Scroll */}
+<div className="overflow-scroll h-32">
+  Scroll hoga!
+</div>
+
+{/* Auto */}
+<div className="overflow-auto h-32">
+  Zaroorat hogi toh scroll!
+</div>
+
+{/* X aur Y alag */}
+<div className="overflow-x-auto overflow-y-hidden">
+  Sirf horizontal scroll!
+</div>
