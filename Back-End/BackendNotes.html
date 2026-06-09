@@ -68,7 +68,7 @@ Backend Full Roadmap:
 
 
 
-Topic 1 — Node.js Basics 🎯
+Topic 1 —   🎯
 Node.js Kya Hai:
 
 
@@ -114,12 +114,180 @@ Node.js vs Browser JS:
 
                             Browser JS                      Node.js
                             
-document                      ✅                             ❌
+document                     ✅                               ❌
 
-window                      ✅                              ❌ 
+window                       ✅                               ❌ 
 
-fs (file system)            ❌                               ✅
+fs (file system)             ❌                               ✅
 
-http (server)               ❌                               ✅ 
+http (server)                ❌                               ✅ 
 
-console.log                ✅                                  ✅ 
+console.log                  ✅                               ✅ 
+
+
+
+require vs import:
+
+// Node.js purana tarika — CommonJS
+
+const fs = require("fs")
+const express = require("express")
+
+
+// Naya tarika — ES Modules
+
+import fs from "fs"
+import express from "express"
+
+Hum ES Modules use karenge — React jaisa!
+
+
+
+
+Built-in Modules:
+1 — fs — File padhna likhna:
+
+
+const fs = require("fs")
+
+// File likhna
+fs.writeFileSync("test.txt", "Hello Mateen!")
+
+// File padhna
+const data = fs.readFileSync("test.txt", "utf8")
+
+console.log(data) // Hello Mateen!
+
+
+
+2 — path — File path:
+
+const path = require("path")
+
+console.log(path.join("folder", "file.txt"))
+// folder/file.txt
+
+
+3 — http — Simple Server:
+
+
+const http = require("http")
+
+const server = http.createServer((req, res) => {
+  res.write("Hello from Server!")
+  res.end()
+})
+
+server.listen(3000, () => {
+  console.log("Server chal raha hai: http://localhost:3000")
+})
+
+
+Browser mein localhost:3000 kholo — Hello from Server! dikhega!
+
+
+
+
+Honest Baat:
+
+✅ fs, path, http — sirf concept ke liye hain
+✅ Real projects mein Express use karte hain
+✅ Yeh directly use nahi hota!
+
+
+Sirf Yaad Rakho:
+
+Node.js = JavaScript ko server pe chalata hai
+Bas itna enough hai!
+
+
+Real Mein Yeh Use Hota Hai:
+
+Node.js    → Engine hai — andar kaam karta hai
+Express    → Hum yeh use karte hain — routes, API
+MongoDB    → Database
+Mongoose   → MongoDB se baat karta hai
+
+
+
+
+
+Topic 2 — NPM + Packages 🎯
+
+NPM Kya Hai:
+
+NPM = Node Package Manager
+Doosron ke banaye packages install karo — khud mat banao!
+
+
+Real Life Example:
+
+Ghar banana hai — eentein khud mat banao — market se kharido!
+NPM = Market hai — packages = eentein!
+
+
+Basic Commands:
+
+# Project shuru karo
+npm init -y
+
+# Package install karo
+npm install express
+
+# Multiple packages
+npm install express mongoose dotenv cors bcryptjs jsonwebtoken
+
+# Dev only package
+npm install -D nodemon
+
+# Package hatao
+npm uninstall express
+
+# Sab packages install karo — package.json se
+npm install
+
+
+Packages Kya Karte Hain:
+
+Package                                Kaam                   
+
+express                              Server + Routes banao
+
+mongoose                             MongoDB se connect
+
+dotenv                               Secret keys chhupa ,
+
+cors                                 Frontend se connect karo
+
+bcryptjs                               Password hash karo
+
+jsonwebtoken                           JWT token banao
+
+nodemon                               Auto restart server
+
+
+
+
+
+node_modules + .gitignore:
+
+# .gitignore file banao
+
+node_modules/
+.env
+
+⚠️ node_modules GitHub pe mat push karo — bahut bada hota hai!
+npm install se wapas aa jata hai!
+
+
+
+Nodemon Kyun:
+
+# Bina nodemon — har change pe manually restart
+node server.js
+
+# Nodemon se — automatic restart!
+nodemon server.js
+
+
+
