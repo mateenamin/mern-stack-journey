@@ -1,6 +1,40 @@
+Bash/Terminal — Basic Commands:
+Navigation:
+# Current folder dekho
+pwd
+
+# Folders list dekho
+ls
+
+# Folder mein jao
+cd FolderName
+
+# Ek peeche jao
+cd ..
+
+# Direct path
+cd "MERN STACK/Back-End"
+
+
+
+Files + Folders:
+
+# Naya folder banao
+mkdir backend
+
+# Naya file banao
+touch server.js
+
+# File delete karo
+rm file.js
+
+# Folder delete karo
+rm -rf folderName
+
 
 
 Backend Kya Hai — Simple:
+
 Frontend = Jo user dekhta hai (React)
 Backend  = Jo andar hota hai (Server + Database)
 
@@ -290,4 +324,269 @@ node server.js
 nodemon server.js
 
 
+
+
+Topic 3 — Express Setup 🎯
+Express Kya Hai:
+
+Express = Node.js ka framework!
+Server banana, routes banana — sab easy ho jata hai!
+
+Pehle Backend Folder Structure Banao:
+Back-End/
+├── node_modules/
+├── src/
+│   ├── routes/
+│   ├── controllers/
+│   ├── models/
+│   ├── middleware/
+│   └── config/
+├── .env
+├── .gitignore
+├── package.json
+└── server.js
+
+
+Industry mein Backend Kya Karta Hai:
+
+1. Data store karta hai    → MongoDB
+2. Logic handle karta hai  → Node.js + Express
+3. Security karta hai      → JWT + bcrypt
+4. Frontend se baat karta  → API
+
+
+
+API Kya Hai — Simple:
+API = Dono ke beech baat karne ka tarika!
+Frontend (React) ←→ API ←→ Backend (Express)
+
+Jaise waiter restaurant mein —
+Customer → Waiter → Kitchen
+React → API → Backend
+
+
+
+Express Setup — Bilkul Zero Se:
+
+Pehle Samjho — Express Kya Karta Hai:
+
+Socho tum ek dukaan khol rahe ho!
+
+Dukaan = Server
+Darwaza = Port (5000)
+Items = Routes (/products, /users)
+Customer = Browser ya React
+
+package.json mein type add karo:
+package.json kholo — yeh add karo:
+
+
+{
+  "name": "server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  }
+}
+
+"type": "module" = import use kar sakte ho
+
+
+
+Step 2 — server.js banao:
+server folder mein — server.js banao:
+
+
+import express from "express"
+// Express library lo — server banana ke liye
+
+
+// Express (port 5000) ko baat karne do
+
+
+const app = express()
+// Server banao
+
+const PORT = 5000
+// Kaunse port pe chalao
+
+app.use(express.json())
+// JSON data samjho — req.body ke liye
+
+// Route — jab "/" pe request aaye
+
+app.get("/", (req, res) => {
+  res.json({ message: "Server chal raha hai!" })
+})
+
+// req = jo aaya (request)
+// res = jo bhejo (response)
+
+app.listen(PORT, () => {
+  console.log(`Server: http://localhost:${PORT}`)
+})
+
+// Server start karo — port pe sun
+
+
+
+
+Step 3 — Terminal mein chalao:
+
+npm run dev
+
+
+Browser mein dekho:
+
+http://localhost:5000
+
+
+Har Cheez Kyun:
+
+
+import express        → Express library lo
+const app             → Server banao
+const PORT = 5000     → Kaunse darwaze pe kholo
+express.json()        → Data samjhne ke liye
+app.get("/")          → Koi "/" pe aaye toh
+req                   → Customer ne kya manga
+res                   → Customer ko kya do
+app.listen(PORT)      → Darwaza kholo — sun shuru karo
+
+
+
+app.use(express.json()) Kya Hai:
+
+JSON data samjhne ke liye!
+
+
+// Bina express.json() — data nahi milega
+app.post("/login", (req, res) => {
+  console.log(req.body) // undefined ❌
+})
+
+
+// express.json() ke baad — data milega
+app.use(express.json())
+app.post("/login", (req, res) => {
+  console.log(req.body) // { email: "ali@gmail.com" } ✅
+})
+
+
+React se data bhejte ho — JSON format mein aata hai
+express.json() us JSON ko samajhta hai!
+
+
+
+Topic 4 — Routes + Controllers 🎯
+
+Routes     = Kaunse URL pe kya hoga
+Controllers = Woh kaam karo
+
+
+
+Real Life:
+
+Dukaan mein:
+
+"/products"  → Sab products dikhao
+"/products/1" → Product ID 1 dikhao
+"/login"     → Login karo
+"/register"  → Register karo
+
+
+Routes — 4 Types:
+
+app.get()    // Data lao
+app.post()   // Data bhejo
+app.put()    // Data update karo
+app.delete() // Data hatao
+
+
+Function Samjho:
+
+app.get("/products", (req, res) => {
+  res.json({ message: "Sab products!" })
+})
+
+
+Simple:
+app.get "/products",   →  jab koi /products pe aaye
+(req, res) =>          →  yeh function chale
+req                    →  Customer ne kya manga
+res                    →  Customer ko kya do
+res.json({})           →  JSON mein jawab do
+
+
+
+req kya hai:
+
+app.get("/products/:id", (req, res) => {
+  console.log(req.params) // URL se → { id: "5" }
+  console.log(req.body)   // Frontend se bheja data
+  console.log(req.query)  // ?category=phone
+})
+
+Yahan par ek choti si galatfahmi (misunderstanding) ho rahi hai. 
+Hum back-end mein req (request) ka bohut zyada istemal karte hain.
+Aapka yeh sochna bilkul sahi hai ke request front-end se aati hai. 
+Lekin back-end ko yeh toh pata hona chahiye na ke front-end kis cheez ki request kar 
+raha hai!Jab tak back-end req ko check nahi karega, usse pata hi nahi chalega ke 
+response mein dena kya hai.
+
+res kya hai:
+
+
+app.get("/products", (req, res) => {
+  res.json({ message: "Data!" })  // JSON bhejo
+  res.status(200).json({})        // Status ke saath
+  res.status(404).json({ message: "Nahi mila!" })
+})
+
+
+app.get("/products/:id", (req, res) => {
+  // 1. Back-end pehle REQ check karta hai ke user ko kaunsa product chahiye
+  const productId = req.params.id; // Front-end ne bheja: "5"
+
+  // 2. Back-end is id ko database mein dhoondta hai
+  // const product = database.find(productId);
+
+  // 3. Phir Back-end RES ke zariye wohi product wapis bhejta hai
+  res.send(`Yeh raha product number ${productId} ka data`); 
+});
+
+
+
+req ko hum READ karte hain: (Front-end se kya aaya? ID kya hai? Name kya hai?).
+
+res ko hum WRITE/SEND karte hain: (Front-end ko jawab bhejo)
+
+
+
+
+
+
+
+Controllers 🎯
+Controllers Kya Hai:
+
+Route ka kaam alag file mein rakho!
+
+Problem Bina Controllers:
+
+// ❌ Sab ek jagah — messy!
+app.get("/products", (req, res) => {
+  // 50 lines ka code yahan
+  // Database query
+  // Validation
+  // Response
+})
+
+
+Solution — Controllers:
+
+// ✅ Route alag — Logic alag!
+app.get("/products", getProducts) // sirf function naam
 
