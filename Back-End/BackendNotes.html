@@ -590,3 +590,184 @@ Solution — Controllers:
 // ✅ Route alag — Logic alag!
 app.get("/products", getProducts) // sirf function naam
 
+
+
+
+
+Topic 5 — Middleware 🎯
+Middleware Kya Hai:
+
+Request aur Response ke beech mein kaam karne wala!
+
+
+
+Real Life:
+Customer → Security Guard → Dukaan
+Request  → Middleware     → Controller
+
+Security guard check karta hai — phir andar jane deta hai!
+
+
+
+
+Simple Example:
+
+// Middleware = function (req, res, next)
+const myMiddleware = (req, res, next) => {
+  console.log("Request aaya!")
+  next() // Aage bhejo — zaroori!
+}
+
+app.use(myMiddleware) // Sab routes pe lagao
+
+next() = "Theek hai — aage jao!"     next() nahi likha = Request ruk jayegi!
+
+
+3 Types:
+
+
+1 — Application Middleware — Sab routes pe:
+
+
+app.use(express.json())  // Yeh bhi middleware hai!
+app.use(cors())          // Yeh bhi!
+
+// Apna middleware
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`)
+  next()
+})
+
+
+2 — Route Middleware — Sirf ek route pe:
+
+
+// 2. Sirf ek specific route mein shamil karna
+app.get('/watch-movie', checkPremiumUser, (req, res) => {
+    // Yeh controller sirf tab chalega jab checkPremiumUser 'next()' chalaye ga
+    res.send("Aap premium movie dekh rahe hain! 🍿");
+});
+
+// Is normal route par koi checking nahi hogi kyunki yahan middleware nahi lagaya
+app.get('/free-videos', (req, res) => {
+    res.send("Yeh free video sab ke liye hai.");
+});
+
+
+
+3 — Error Middleware — Errors pakadna:
+
+
+// 4 parameters hote hain — err pehle!
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: err.message })
+})
+
+Flow:
+Request
+  ↓
+logger.js    → Log karo
+  ↓
+auth.js      → Token check karo
+  ↓
+Controller   → Kaam karo
+  ↓
+Response
+
+
+
+
+Topic 6 — MongoDB + Mongoose 🎯
+MongoDB Kya Hai:
+
+Database = Data store karne ki jagah!
+
+
+SQL vs MongoDB:
+
+
+SQL                        MongoDB
+
+Tables                      Collections
+
+Rows                        Documents
+
+Columns                      Fields
+
+
+
+Real Life:
+SQL:
+Table = Users
+Row   = { id: 1, name: "Ali", age: 25 }
+
+MongoDB:
+Collection = users
+Document   = { name: "Ali", age: 25 }
+
+
+
+Jab hum apne project mein Database (MongoDB) ko lekar aate hain,
+toh hamare project ke folder structure mein 2 naye folders bante hain:
+
+src/
+├── config/               <-- 🆕 Naya Folder (Database Connection ke liye)
+│   └── db.js            
+├── models/               <-- 🆕 Naya Folder (Data ka Structure/Map rakhne ke liye)
+│   └── product.model.js  
+├── middleware/
+├── controllers/
+└── routes/
+
+
+MongoDB ek "Database" hai (Jaise ek physical digital locker ya godown jahan aapka 
+saara data store hota hai).
+
+Mongoose ek "Library/Tool" hai (Jaise us godown ka ek manager, jo Node.js application 
+aur database ke darmiyan khara hota hai taake data tameez aur tarteeb se andar-bahar jaye).
+
+
+ Folder Structure:
+
+
+ src/
+├── config/
+│   └── config.js (Database connected)
+├── models/               <-- 🆕 Yeh Naya Folder Banayein
+│   └── product.model.js  <-- 🆕 Product ka naksha (Schema) yahan hoga
+├── controllers/
+│   └── products.controller.js
+├── routes/
+└── server.js
+
+
+
+
+ Inka Connection Flow Kaise Chalta Hai?
+ 
+ Chote aur asan lafzon mein samajhein ke yeh file aapas mein kaise baat karti hain:
+ 
+ 
+ Step A: Hum models/product.model.js ke andar product ka design banate 
+ hain aur use export kar dete hain.
+
+ Step B: Hum apne products.controller.js ke andar is product model ko import kar lete hain.
+ 
+ 
+ 🔄 Real-World Data Flow (Big Picture)
+ 
+ Farz karein Front-end se request aayi ke "Mujhe saare products dikhao":
+ 
+ Request aayi route se hoti hui Controller ke paas.
+ 
+ Controller ne dekha ke mujhe data chahiye, usne apne andar import kiye hue Model 
+ (Munshi) ko aawaz lagayi.
+ 
+ 
+ Model database mein gaya, saare products uthaye, aur Controller ko wapis la kar de diye.
+ 
+ Controller ne woh data res.json() ke zariye Front-end ko bhej diya.
+
+
+
+
