@@ -3,11 +3,13 @@ import express from "express"
 import connectDB from "./config/config.js"; // 👈 Step B: Database file ko import ki
 import router from "./routes/index.route.js";
 import logger from "./middleware/logger.middleware.js";
+import adminSeeder from "./seeders/admin.seeder.js"
+
 
 const app = express()
 const PORT = process.env.PORT
-// 🔌 Database wale switch ko daba diya (Function call kar diya)
-connectDB();
+
+
 
 app.use(express.json());
                 
@@ -20,7 +22,10 @@ app.use('/api/v1', router);
 // res.json({message : "Server chal raha hai!"})
 // })
 
-
-app.listen(PORT ,()=>{
-    console.log(`Server chal raha hai: http://localhost:${PORT}`)
+// 🔌 Database wale switch ko daba diya (Function call kar diya)
+connectDB().then(async () => {
+  await adminSeeder() // ← Admin banao
+  app.listen(PORT, () => {
+    console.log(`Server: http://localhost:${PORT}`)
+  })
 })
