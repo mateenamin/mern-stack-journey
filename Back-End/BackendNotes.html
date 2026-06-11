@@ -678,6 +678,7 @@ Response
 
 
 Topic 6 — MongoDB + Mongoose 🎯
+
 MongoDB Kya Hai:
 
 Database = Data store karne ki jagah!
@@ -730,6 +731,7 @@ aur database ke darmiyan khara hota hai taake data tameez aur tarteeb se andar-b
  Folder Structure:
 
 
+
  src/
 ├── config/
 │   └── config.js (Database connected)
@@ -741,6 +743,23 @@ aur database ke darmiyan khara hota hai taake data tameez aur tarteeb se andar-b
 └── server.js
 
 
+
+Schema Aur Model
+
+
+
+
+
+Schema (Naksha / Design): Yeh Express ko batata hai ke data ka design kaisa hoga. 
+
+Maslan, agar ek Product hai, toh usme kya kya cheezain hongi?
+
+title (Hamesha text/string hoga)
+price (Hamesha number hoga)
+
+Model (Munshi / Manager): Is nakshe (Schema) ko use karke Mongoose ek Model bana deta hai. 
+Yeh model hamara "Munshi" hota hai. Jab bhi database se data lana ho ya save karna ho, 
+controller isi Munshi (Model) ko bolta hai.
 
 
  Inka Connection Flow Kaise Chalta Hai?
@@ -767,6 +786,218 @@ aur database ke darmiyan khara hota hai taake data tameez aur tarteeb se andar-b
  Model database mein gaya, saare products uthaye, aur Controller ko wapis la kar de diye.
  
  Controller ne woh data res.json() ke zariye Front-end ko bhej diya.
+
+
+
+
+
+
+
+
+
+
+ CRUD Operations:
+
+
+ Jaise humne pehle baat ki thi, back-end development mein 90% kaam CRUD hi hota hai. 
+ Iska matlab hai database ke sath khelna. Yeh saari logic hamare Controller folder ke 
+ andar likhi jati hai aur Routes ke zariye front-end se connect hoti hai.
+
+
+
+
+ CRUD Ka Matlab Aur Unke HTTP Methods:
+
+
+
+ Jab client (front-end) database se baat karta hai, toh woh alag-alag HTTP Methods (Verbs) 
+ ka istemal karta hai taake controller ko pata chale ke karna kya hai.
+
+
+ Operation              Matlab (Urdu)                 HTTP Method            Route Ki Misal
+ 
+ C - Create          Naya data database mein daalna     POST                  /api/v1/Products/add
+ 
+ R - Read            Database se data nikal kar dikhana  GET                  /api/v1/Products/all
+ 
+ U - Update          Pehle se maujood data ko badalna    PUT/PATCH            /api/v1/Products/update/:id
+ 
+ D - Delete          Database se data ko gayab/khatam karna  DELETE           /api/v1/Products/delete/:id
+
+
+
+
+ Folder Structure Mein CRUD Ka Flow (Big Picture)
+ 
+ 
+ Farz karein aapki ecommerce website hai aur aapne ek product delete karna hai 
+ (Delete Operation). Data ka rasta folders ke darmiyan is tarah chalega:
+ 
+ products.router.js (Route): Front-end se request aayi DELETE method ke sath:
+ /api/v1/Products/delete/123 (Yahan 123 product ki ID hai).
+ 
+ products.controller.js (Controller): Router ne request Controller ko pakda di. 
+ Controller ne URL se ID (123) nikali.
+ 
+ product.model.js (Model/Munshi): Controller ne apne andar import kiye hue Model ko bola:
+"Oye Munshi! Database mein jao aur jis product ki ID 123 hai use delete kar do."
+
+Database (MongoDB): Model ne database se us product ko hamesha ke liye mita diya.
+
+Response: Controller ne front-end ko response bhej diya: 
+{ success: true, message: "Product deleted!" }
+
+
+
+
+Topic 9: Authentication — JWT :
+
+Authentication Kya Hai? (Asan Lafzon Mein)
+
+Authentication ka seedha sa matlab hai: 
+"User ki pehchan karna (Identity Verify karna.)"
+
+Yeh back-end ka woh system hota hai jo yeh check karta hai ke jo banda website par login
+karne ki koshish kar raha hai, kya woh sach mein wahi hai ya koi hacker hai.
+
+
+src/
+└── controllers/
+    └── auth.controller.js  <-- 🔑 User ko Register aur Login karwane ka kaam (Authentication) is file mein hota hai.
+
+
+
+Authentication vs JWT 
+
+Authentication ek kaam hai:
+
+Jab user website par apna Email aur Password daalta hai
+toh controller database mein ja kar check karta hai ke password sahi hai ya galat. Is
+poore check karne ke process ko hum Authentication kehte hain.
+
+
+JWT ek tool ha:
+
+Jab authentication kamyab ho jati hai (yani back-end maan leta hai ke
+user sahi hai), toh controller user ko baar-baar password daalney ki takleef se bachane
+ke liye ek digital pass de deta hai, jise hum JWT Token kehte hain.
+
+
+
+JWT Kya Hai? (The Digital Pass)
+
+JWT ka matlab hai JSON Web Token
+
+Aasan lafzon mein, yeh bilkul ek (Hand band) ki tarah hai.
+
+(1)Jab aap ticket counter par paise dete hain, toh woh aapko ek band baandh dete hai
+
+(2) Ab aap park ke andar jitne bhi jhoole (pages) par jayenge, wahan khada guard 
+(middleware) aap se baar-baar aapka identity card ya paise nahi mangega. 
+Woh bas aapka band (token) dekhega aur kahega: "Aage jao."
+
+
+
+Back-end mein bhi bilkul yahi hota hai. Jab user ek baar sahi email aur password daal kar
+login ho jata hai, toh controller use ek JWT Token (ek lamba encrypted text) bhej deta hai.
+
+
+Yeh Code Dikhta Kaisa Hai?
+
+Yeh koi simple text nahi hota, yeh JavaScript ka ek encrypted lamba string hota hai 
+jo teen hisson se mil kar banta hai aur dekhne mein aisa lagta hai:
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMzQ1IiwibmFtZSI6IkFsaSJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+
+Pehla Hissa (Header): Isme bataya jata hai ke token kis technology se bana hai.
+
+Doosra Hissa (Payload/Data): Isme user ki choti si detail chupi hoti hai, 
+jaise user ki Database ID (id: 12345)
+
+Teesra Hissa (Signature): Yeh sab se ahem hissa hai, yeh aapke backend ka secret password 
+hota hai jo yeh pakka karta hai ke kisi hacker ne token ke sath chhed-chhad na ki ho.
+
+
+
+
+Folder Structure Mein Yeh Kahan Use Hota Hai?
+
+
+src/
+├── controllers/
+│   └── auth.controller.js  <-- 🔑 User ke login hote hi Token YAHAN banta hai
+├── middleware/
+│   └── auth.middleware.js  <-- 🛑 Har request par Token sahi hai ya galat, YAHAN check hota hai
+
+
+controllers/auth.controller.js: Yeh file token ko banati (generate karti) hai aur 
+front-end ko bhejti hai jab login successful ho jaye
+
+
+middleware/auth.middleware.js: Yeh file token ko verify (check) karti hai jab 
+user koi secure page (jaise Dashboard) kholne ki koshish karta hai.
+
+
+
+
+
+
+Topic 10    bcrypt 
+
+Kya Hai Aur Iski Zaroorat Kyun Hai?
+
+Jab bhi koi user aapki website par naya account banata hai (Sign-up karta hai), 
+toh woh apna ek password set karta hai—jaise Mateen786
+
+Agar aap is password ko database mein bilkul isi tarah saaf-saaf (Plain Text) save kar denge,
+toh iske do bade nuksaan hain:
+
+Database Leak: Agar kisi hacker ne aapka MongoDB Atlas ka database hack kar liya,
+toh use sab ke real passwords mil jayenge.
+
+
+Internal Access: Aap (as a developer) ya aapka koi team member bhi database khol kar kisi
+ka bhi password dekh sakta hai, jo ke bilkul galti hai.
+
+
+
+
+Is masle ko hal karne ke liye hum bcrypt (npm package) use karte hain. 
+Yeh ek One-Way Hashing Algorithm hai. Iska kaam hai real password ko ek aise ajeeb 
+aur lambe khufia code mein badal dena jise koi insaan ya computer decode (read) na kar 
+sake—jaise $2b$10$X7vRt...
+
+
+
+
+Folder Structure:
+
+
+bcrypt ko use karne ke liye hamein koi naya folder nahi banana padta. 
+Yeh hamare pehle se maujood folders ke andar hi kaam karta hai:
+
+
+src/
+├── models/
+│   └── user.model.js       <-- ⚡ Tarika A: Mongoose Schema ke andar automatic lagana
+└── controllers/
+    └── auth.controller.js  <-- ⚡ Tarika B: Controller ke andar direct lagana
+
+
+Industry mein ise use karne ke 2 tarike hain. Hum dono ka sirf concept aur rasta dekhte hain
+
+
+
+Tarika A: Model Ke Andar (Professional Method)
+
+Professional coders ise direct user.model.js ke andar set kar dete hain jise Pre-Save 
+Hook kehte hain.
+
+
+Iska matlab hota hai ke jab bhi controller user ka data save karne lagega,
+model automatic database mein jaane se pehle password ko khud hi hash (chupa) dega. 
+Controller ko fikar karne ki zaroorat hi nahi hoti.
 
 
 

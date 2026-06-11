@@ -9,7 +9,6 @@ const PORT = process.env.PORT
 // 🔌 Database wale switch ko daba diya (Function call kar diya)
 connectDB();
 
-
 app.use(express.json());
                 
 //     (Global Level)
@@ -17,9 +16,9 @@ app.use(express.json());
 app.use('/api/v1', router);
 
 
-app.get( "/" ,(req ,res)=>{
-res.json({message : "Server chal raha hai!"})
-})
+// app.get( "/" ,(req ,res)=>{
+// res.json({message : "Server chal raha hai!"})
+// })
 
 
 app.listen(PORT ,()=>{
