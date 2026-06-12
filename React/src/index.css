@@ -1,3 +1,0 @@
-@tailwind base;       /* Browser default styles reset karo */
-@tailwind components; /* Tailwind components load karo */
-@tailwind utilities;  /* Sab utility classes load karo — bg-blue, p-4 etc */

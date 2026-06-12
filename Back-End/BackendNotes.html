@@ -945,6 +945,7 @@ user koi secure page (jaise Dashboard) kholne ki koshish karta hai.
 
 Topic 10    bcrypt 
 
+
 Kya Hai Aur Iski Zaroorat Kyun Hai?
 
 Jab bhi koi user aapki website par naya account banata hai (Sign-up karta hai), 
@@ -1001,4 +1002,315 @@ Controller ko fikar karne ki zaroorat hi nahi hoti.
 
 
 
+
+
+
+
+Topic 11 — Protected Routes 🎯
+
+
+Kya Hai:
+
+Kuch pages sirf logged in user dekhe!
+
+
+Practically Tune Already Kar Liya! ✅
+/profile  → protect middleware ✅
+/admin    → protect + adminOnly ✅
+
+
+
+Theory Yaad Rakho:
+Public Routes    → Koi bhi access kare
+Protected Routes → Sirf logged in user
+Admin Routes     → Sirf admin
+
+
+
+Example:
+Public:
+POST /api/v1/auth/register  → Koi bhi
+POST /api/v1/auth/login     → Koi bhi
+
+Protected:
+GET /api/v1/auth/profile    → Sirf logged in
+
+Admin:
+GET /api/v1/auth/admin      → Sirf admin
+POST /api/v1/products       → Sirf admin
+DELETE /api/v1/products/:id → Sirf admin
+
+
+
+
+Middleware mein likho → protect, adminOnly
+Routes mein use karo → function naam likho
+
+
+Routes mein:
+// Public
+router.post("/register", register)
+router.post("/login", login)
+
+// Protected — protect middleware
+router.get("/profile", protect, getProfile)
+
+// Admin — protect + adminOnly
+router.get("/admin", protect, adminOnly, getAdmin)
+
+
+Middleware — Already Bana Hua:
+// auth.middleware.js mein pehle se hai!
+
+export const protect = async (req, res, next) => {
+  // Token check karo
+}
+
+export const adminOnly = (req, res, next) => {
+  // Role check karo
+}
+
+
+
+
+Topic 12 — Error Handling 🎯
+Kya Hai:
+
+Errors ko properly handle karo — user ko sahi message do!
+
+
+Problem Bina Error Handling:
+// ❌ Bura
+export const register = async (req, res) => {
+  const user = await User.create({ name, email, password })
+  res.json({ success: true })
+  // Error aaya? Server crash! 💥
+}
+
+
+
+Solution — try/catch:
+
+// ✅ Acha
+export const register = async (req, res) => {
+  try {
+    const user = await User.create({ name, email, password })
+    res.json({ success: true })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+
+Global Error Middleware:
+src/middleware/error.middleware.js:
+
+
+export const errorHandler = (err, req, res, next) => {
+  const statusCode = err.statusCode || 500
+
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Server Error!"
+  })
+}
+
+server.js mein add karo — sab routes ke baad:
+
+import { errorHandler } from "./src/middleware/error.middleware.js"
+
+// Sab routes ke baad
+app.use(errorHandler)
+
+
+
+
+
+Status Codes Yaad Rakho:
+
+Code                        Matlab 
+
+200                           OK 
+201                          Created
+400                         Bad Request
+401                         Unauthorized
+403                         Forbidden
+404                          Not Found
+500                         Server Error
+
+
+
+
+Topic 13 — Environment Variables 🎯
+Kya Hai:
+
+Secret values chhupaو — code mein mat likho!
+
+
+
+// ❌ Bura — secret code mein hai!
+const token = jwt.sign({ id }, "secret_key")
+// GitHub pe push kiya → sab ne dekha → hack ho gaya!
+
+
+
+
+// ✅ Acha — .env mein chupaو!
+const token = jwt.sign({ id }, process.env.JWT_SECRET)
+
+
+.env File Banao:
+
+PORT=5000
+MONGODB_URI=mongodb+srv://...
+JWT_SECRET=mera_super_secret_key_123
+JWT_EXPIRE=7d
+
+
+
+// server.js mein sabse upar
+import dotenv from "dotenv"
+dotenv.config()
+
+// Ab poori app mein use karo
+process.env.PORT
+process.env.MONGODB_URI
+process.env.JWT_SECRET
+
+
+
+Topic 14 — CORS 🎯
+
+
+Kya Hai:
+
+Cross Origin Resource Sharing
+Frontend aur Backend alag ports pe hain — baat karne do!
+
+
+Problem:
+Frontend → localhost:5173 (React)
+Backend  → localhost:5000 (Express)
+
+Bina CORS:
+❌ Browser block karta hai!
+"Access blocked — different origin!"
+
+
+Solution:
+CORS lagao → Browser allow karta hai!
+✅ React Backend se baat kar sakta hai!
+
+
+Basic Use:
+
+import cors from "cors"
+
+// Sab ko allow karo
+app.use(cors())
+
+
+Better Use — Specific Origin:
+
+app.use(cors({
+  origin: "http://localhost:5173", // Sirf React ko allow
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}))
+
+
+env mein add karo:
+FRONTEND_URL=http://localhost:5173
+
+
+server.js mein:
+import cors from "cors"
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}))
+
+
+
+
+Topic 15 — Frontend + Backend Connect 🎯
+Kya Hai:
+
+React se Backend API call karna
+
+
+Flow:
+React (5173) → Axios → Express (5000) → MongoDB
+
+
+npm install axios
+
+
+Base URL Set Karo:
+src/Api/axios.js — React project mein:
+
+
+import axios from "axios"
+
+const api = axios.create({
+  baseURL: "http://localhost:5000/api/v1",
+})
+
+// Har request mein token auto add karo
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token")
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+export default api
+
+
+
+Login API Call — React mein:
+
+
+import api from "../Api/axios.js"
+
+// Login
+const login = async (email, password) => {
+  const { data } = await api.post("/auth/login", {
+    email,
+    password
+  })
+
+  // Token save karo
+  localStorage.setItem("token", data.token)
+
+  return data
+}
+
+// Register
+const register = async (name, email, password) => {
+  const { data } = await api.post("/auth/register", {
+    name,
+    email,
+    password
+  })
+  return data
+}
+
+// Profile
+const getProfile = async () => {
+  const { data } = await api.get("/auth/profile")
+  return data
+}
+
+
+
+interceptors Kya Hai:
+Har request se pehle → Token auto add karo
+Manually har baar nahi likhna!
 
