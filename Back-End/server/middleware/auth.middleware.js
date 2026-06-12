@@ -50,6 +50,8 @@ import User from "../models/user.model.js"
 // Login check
 export const protect = async (req, res, next) => {
 
+    try {
+
   // Token lo
   const token = req.headers.authorization?.split(" ")[1]
 
@@ -61,16 +63,28 @@ export const protect = async (req, res, next) => {
   }
 
   // Token verify karo
-  const decoded = jwt.verify(token, "secret_key")
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
   // User find karo
   req.user = await User.findById(decoded.id)
 
   next()
 }
+  catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Token ghalat hai!"
+    })
+  }
+
+}
 
 // Admin check
 export const adminOnly = (req, res, next) => {
+
+
+     try {
+
   if (req.user.role !== "admin") {
     return res.status(403).json({
       success: false,
@@ -78,6 +92,14 @@ export const adminOnly = (req, res, next) => {
     })
   }
   next()
+}
+catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+  
 }
 
 

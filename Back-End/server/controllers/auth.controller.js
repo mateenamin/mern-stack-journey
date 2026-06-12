@@ -29,6 +29,7 @@ import jwt from "jsonwebtoken"
 
 export  const register = async (req ,res) =>{
 
+  try {
    // 1. Data lo
   const  { name, email, password } = req.body
 
@@ -96,8 +97,8 @@ if (!name || !email || !password) {
   // 6. Token banao — JWT
   const token = jwt.sign(
     { id: user._id },
-    "secret_key",
-    { expiresIn: "7d" }
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE }
   )
 
 //   .sign() us package ka ek special function hai jiska kaam hota hai naya token Banana 
@@ -121,6 +122,16 @@ if (!name || !email || !password) {
     }
   })
 
+}
+
+catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
+
+
 //   4. token,
   
 //   Humne jo pichli line mein JWT Token banaya tha, woh hum yahan front-end ko de rahe hain. 
@@ -139,6 +150,8 @@ if (!name || !email || !password) {
 
 
 export const login = async (req ,res ) =>{
+
+  try{
 
     // 1. Data lo
      const {  email , password } = req.body
@@ -178,8 +191,8 @@ export const login = async (req ,res ) =>{
   // 5. Token banao
   const token = jwt.sign(
     { id: user._id },
-    "secret_key",
-    { expiresIn: "7d" }
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRE }
   )
 
   // 6. Response bhejo
@@ -193,24 +206,45 @@ export const login = async (req ,res ) =>{
       email: user.email
     }
 })
+  }
 
+  catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
 }
 
 
  
 // Profile
 export const getProfile = async (req, res) => {
-  res.json({
-    success: true,
-    user: req.user
-  })
+  try {
+    res.json({
+      success: true,
+      user: req.user
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
 }
 
 // Admin
 export const getAdmin = async (req, res) => {
-  res.json({
-    success: true,
-    message: "Admin page!",
-    user: req.user
-  })
+  try {
+    res.json({
+      success: true,
+      message: "Admin page!",
+      user: req.user
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message
+    })
+  }
 }
