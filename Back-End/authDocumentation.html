@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auth Project Documentation</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --card: #16161f;
+  --border: #2a2a3a;
+  --accent: #e94560;
+  --accent2: #6366f1;
+  --accent3: #3ecf8e;
+  --amber: #f59e0b;
+  --text: #e8e6f0;
+  --muted: #7070a0;
+  --code-bg: #080810;
+  --ff: 'Syne', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--ff); line-height: 1.6; overflow-x: hidden; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none; z-index: 0;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; position: relative; z-index: 1; }
+
+/* HEADER */
+.header {
+  text-align: center; padding: 60px 30px; margin-bottom: 50px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  position: relative; overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; top: -80px; right: -80px;
+  width: 250px; height: 250px;
+  background: radial-gradient(circle, rgba(233,69,96,0.12), transparent 70%);
+  border-radius: 50%;
+}
+.header::after {
+  content: ''; position: absolute; bottom: -60px; left: -60px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(99,102,241,0.1), transparent 70%);
+  border-radius: 50%;
+}
+.badge {
+  display: inline-block; background: rgba(233,69,96,0.1); color: var(--accent);
+  border: 1px solid rgba(233,69,96,0.3); padding: 4px 14px; border-radius: 20px;
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  font-family: var(--mono); margin-bottom: 16px;
+}
+.header h1 { font-size: clamp(28px, 5vw, 46px); font-weight: 800; margin-bottom: 10px; }
+.header h1 span { color: var(--accent); }
+.header p { color: var(--muted); font-size: 14px; max-width: 500px; margin: 0 auto 24px; }
+.stats { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+.stat { text-align: center; }
+.stat-num { font-size: 26px; font-weight: 800; color: var(--accent); display: block; }
+.stat-label { font-size: 10px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; font-family: var(--mono); }
+
+/* SECTION */
+.section { margin-bottom: 40px; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.section-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+.section-sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+
+/* TOPIC CARD */
+.topic-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  margin-bottom: 16px; overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.topic-card:hover { border-color: rgba(233,69,96,0.3); transform: translateY(-1px); }
+
+.topic-header {
+  display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+  cursor: pointer; user-select: none;
+}
+.topic-num {
+  font-family: var(--mono); font-size: 10px; color: var(--accent);
+  background: rgba(233,69,96,0.1); border: 1px solid rgba(233,69,96,0.2);
+  padding: 3px 10px; border-radius: 6px; min-width: 55px; text-align: center;
+}
+.topic-title { font-size: 14px; font-weight: 700; flex: 1; }
+.topic-tag {
+  font-size: 10px; padding: 3px 10px; border-radius: 6px;
+  letter-spacing: 1px; text-transform: uppercase; font-family: var(--mono);
+}
+.tag-be { background: rgba(99,102,241,0.1); color: #a89cf7; border: 1px solid rgba(99,102,241,0.2); }
+.tag-fe { background: rgba(62,207,142,0.1); color: var(--accent3); border: 1px solid rgba(62,207,142,0.2); }
+.tag-both { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+.topic-arrow { color: var(--muted); font-size: 11px; transition: transform 0.3s; }
+.topic-card.open .topic-arrow { transform: rotate(180deg); }
+
+.topic-body { display: none; padding: 0 20px 20px; border-top: 1px solid var(--border); padding-top: 16px; }
+.topic-card.open .topic-body { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* DESCRIPTION */
+.desc-box {
+  background: rgba(99,102,241,0.06); border-left: 3px solid var(--accent2);
+  border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 14px;
+  font-size: 13px; color: var(--text); line-height: 1.7;
+}
+.desc-box strong { color: #a89cf7; }
+
+/* CODE */
+.code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px; margin: 12px 0; overflow: hidden; }
+.code-label {
+  background: rgba(255,255,255,0.03); padding: 6px 14px;
+  font-family: var(--mono); font-size: 10px; color: var(--muted);
+  letter-spacing: 1px; border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+pre { padding: 16px; font-family: var(--mono); font-size: 12px; line-height: 1.8; overflow-x: auto; color: var(--text); }
+.kw { color: #c792ea; }
+.fn { color: #82aaff; }
+.str { color: #c3e88d; }
+.cm { color: #546e7a; font-style: italic; }
+.tag { color: #f07178; }
+.attr { color: #e94560; }
+.val { color: #c3e88d; }
+.num { color: var(--amber); }
+
+/* FLOW */
+.flow { display: flex; flex-direction: column; gap: 4px; margin: 12px 0; }
+.flow-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
+.flow-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.flow-arrow { color: var(--muted); font-size: 10px; padding-left: 8px; }
+
+/* TABLE */
+.doc-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 12px; }
+.doc-table th { padding: 8px 14px; text-align: left; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); }
+.doc-table td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.doc-table td:first-child { font-family: var(--mono); color: var(--accent); font-size: 11px; }
+.doc-table td:last-child { color: var(--muted); }
+
+/* NOTE */
+.note { background: rgba(62,207,142,0.06); border: 1px solid rgba(62,207,142,0.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--accent3); margin: 10px 0; }
+.warn { background: rgba(233,69,96,0.06); border: 1px solid rgba(233,69,96,0.2); border-radius: 8px; padding: 10px 14px; font-size: 12px; color: var(--accent); margin: 10px 0; }
+
+/* CHECKLIST */
+.checklist { list-style: none; margin: 10px 0; }
+.checklist li { font-size: 12px; color: var(--muted); padding: 5px 0; display: flex; gap: 8px; align-items: center; }
+.checklist li::before { content: '✓'; color: var(--accent3); font-weight: 700; }
+
+/* DIVIDER */
+.divider { height: 1px; background: var(--border); margin: 30px 0; }
+
+@media (max-width: 600px) { .stats { gap: 16px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">MERN Stack</div>
+    <h1>Auth Project <span>Documentation</span></h1>
+    <p>Frontend + Backend — Ek ek topic ki complete guide. Mateen Amin ke liye.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-num">15</span><span class="stat-label">Topics</span></div>
+      <div class="stat"><span class="stat-num">2</span><span class="stat-label">Projects</span></div>
+      <div class="stat"><span class="stat-num">Full</span><span class="stat-label">Stack</span></div>
+      <div class="stat"><span class="stat-num">Auth</span><span class="stat-label">System</span></div>
+    </div>
+  </div>
+
+  <!-- BACKEND -->
+  <div class="section">
+    <div class="section-tag">— Server Side</div>
+    <div class="section-title">Backend Documentation</div>
+    <div class="section-sub">Node.js + Express + MongoDB — Auth API</div>
+
+    <!-- T1 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 01</span>
+        <span class="topic-title">Node.js + NPM Setup</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Node.js</strong> = JavaScript ko server pe chalata hai. Browser ke bahar bhi JS chale!<br>
+          <strong>NPM</strong> = Node Package Manager — doosron ke packages install karo.
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Setup Commands</div>
+          <pre><span class="cm"># Project shuru karo</span>
+npm init -y
+
+<span class="cm"># Sab packages ek saath</span>
+npm install express mongoose dotenv cors bcryptjs jsonwebtoken
+
+<span class="cm"># Dev tool</span>
+npm install -D nodemon</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">package.json</div>
+          <pre>{
+  <span class="attr">"type"</span>: <span class="str">"module"</span>,
+  <span class="attr">"scripts"</span>: {
+    <span class="attr">"dev"</span>: <span class="str">"nodemon server.js"</span>,
+    <span class="attr">"start"</span>: <span class="str">"node server.js"</span>
+  }
+}</pre>
+        </div>
+        <table class="doc-table">
+          <tr><th>Package</th><th>Kaam</th></tr>
+          <tr><td>express</td><td>Server + Routes banao</td></tr>
+          <tr><td>mongoose</td><td>MongoDB se connect karo</td></tr>
+          <tr><td>dotenv</td><td>Secret values chhupaو</td></tr>
+          <tr><td>cors</td><td>Frontend connect karo</td></tr>
+          <tr><td>bcryptjs</td><td>Password hash karo</td></tr>
+          <tr><td>jsonwebtoken</td><td>JWT token banao</td></tr>
+          <tr><td>nodemon</td><td>Auto server restart</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- T2 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 02</span>
+        <span class="topic-title">Folder Structure</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Industry standard structure</strong> — har cheez apni jagah pe!
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Structure</div>
+          <pre>server/
+├── src/
+│   ├── config/
+│   │   └── db.js          <span class="cm">← MongoDB connect</span>
+│   ├── models/
+│   │   └── user.model.js  <span class="cm">← Data blueprint</span>
+│   ├── controllers/
+│   │   └── auth.controller.js  <span class="cm">← Logic</span>
+│   ├── routes/
+│   │   ├── index.js       <span class="cm">← Sab routes</span>
+│   │   └── auth.routes.js <span class="cm">← Auth routes</span>
+│   ├── middleware/
+│   │   └── auth.middleware.js  <span class="cm">← Token check</span>
+│   └── seeders/
+│       └── admin.seeder.js     <span class="cm">← Admin banao</span>
+├── .env                   <span class="cm">← Secret values</span>
+├── .gitignore
+└── server.js              <span class="cm">← Entry point</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- T3 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 03</span>
+        <span class="topic-title">Express Setup — server.js</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>server.js</strong> = Entry point — sab yahan se shuru hota hai!
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">server.js</div>
+          <pre><span class="kw">import</span> express <span class="kw">from</span> <span class="str">"express"</span>
+<span class="kw">import</span> dotenv <span class="kw">from</span> <span class="str">"dotenv"</span>
+<span class="kw">import</span> cors <span class="kw">from</span> <span class="str">"cors"</span>
+<span class="kw">import</span> connectDB <span class="kw">from</span> <span class="str">"./src/config/db.js"</span>
+<span class="kw">import</span> router <span class="kw">from</span> <span class="str">"./src/routes/index.js"</span>
+<span class="kw">import</span> adminSeeder <span class="kw">from</span> <span class="str">"./src/seeders/admin.seeder.js"</span>
+
+dotenv.<span class="fn">config</span>()
+
+<span class="kw">const</span> app = <span class="fn">express</span>()
+<span class="kw">const</span> PORT = process.env.PORT || <span class="num">5000</span>
+
+app.<span class="fn">use</span>(<span class="fn">cors</span>({ origin: process.env.FRONTEND_URL, credentials: <span class="kw">true</span> }))
+app.<span class="fn">use</span>(express.<span class="fn">json</span>())
+app.<span class="fn">use</span>(<span class="str">"/api/v1"</span>, router)
+
+<span class="fn">connectDB</span>().<span class="fn">then</span>(<span class="kw">async</span> () => {
+  <span class="kw">await</span> <span class="fn">adminSeeder</span>()
+  app.<span class="fn">listen</span>(PORT, () => console.<span class="fn">log</span>(`Server: http://localhost:${PORT}`))
+})</pre>
+        </div>
+        <table class="doc-table">
+          <tr><th>Line</th><th>Kyun</th></tr>
+          <tr><td>express()</td><td>Server banao</td></tr>
+          <tr><td>express.json()</td><td>JSON data samjho</td></tr>
+          <tr><td>cors()</td><td>Frontend allow karo</td></tr>
+          <tr><td>dotenv.config()</td><td>.env load karo</td></tr>
+          <tr><td>app.listen()</td><td>Server start karo</td></tr>
+          <tr><td>connectDB().then()</td><td>DB connect hone ke baad server chale</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- T4 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 04</span>
+        <span class="topic-title">MongoDB + Mongoose Connect</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>MongoDB Atlas</strong> = Cloud mein free database.<br>
+          <strong>Mongoose</strong> = JS se MongoDB se baat karo.
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/config/db.js</div>
+          <pre><span class="kw">import</span> mongoose <span class="kw">from</span> <span class="str">"mongoose"</span>
+
+<span class="kw">const</span> <span class="fn">connectDB</span> = <span class="kw">async</span> () => {
+  <span class="kw">try</span> {
+    <span class="kw">await</span> mongoose.<span class="fn">connect</span>(process.env.MONGODB_URI)
+    console.<span class="fn">log</span>(<span class="str">"MongoDB Connected! ✅"</span>)
+  } <span class="kw">catch</span> (error) {
+    console.<span class="fn">log</span>(<span class="str">"Error:"</span>, error.message)
+    process.<span class="fn">exit</span>(<span class="num">1</span>)
+  }
+}
+
+<span class="kw">export default</span> connectDB</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">.env</div>
+          <pre>PORT=<span class="num">5000</span>
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/shopply
+JWT_SECRET=shopply_secret_key_123
+JWT_EXPIRE=7d
+FRONTEND_URL=http://localhost:<span class="num">5173</span></pre>
+        </div>
+        <div class="warn">⚠️ .env kabhi GitHub pe push mat karo! .gitignore mein add karo!</div>
+      </div>
+    </div>
+
+    <!-- T5 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 05</span>
+        <span class="topic-title">User Model + Schema</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Model</strong> = Database mein data ka blueprint.<br>
+          <strong>Schema</strong> = Har field ka type aur rules.
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/models/user.model.js</div>
+          <pre><span class="kw">import</span> mongoose <span class="kw">from</span> <span class="str">"mongoose"</span>
+
+<span class="kw">const</span> userSchema = <span class="kw">new</span> mongoose.<span class="fn">Schema</span>({
+  name:     { type: String, required: <span class="kw">true</span> },
+  email:    { type: String, required: <span class="kw">true</span>, unique: <span class="kw">true</span> },
+  password: { type: String, required: <span class="kw">true</span> },
+  role:     { type: String, default: <span class="str">"user"</span> }
+}, { timestamps: <span class="kw">true</span> })
+
+<span class="kw">export default</span> mongoose.<span class="fn">model</span>(<span class="str">"User"</span>, userSchema)</pre>
+        </div>
+        <table class="doc-table">
+          <tr><th>Option</th><th>Matlab</th></tr>
+          <tr><td>required: true</td><td>Field zaroori hai</td></tr>
+          <tr><td>unique: true</td><td>Duplicate nahi</td></tr>
+          <tr><td>default: "user"</td><td>Auto "user" — admin manually</td></tr>
+          <tr><td>timestamps: true</td><td>Auto createdAt + updatedAt</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- T6 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 06</span>
+        <span class="topic-title">Routes + Controllers</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Routes</strong> = URL define karo.<br>
+          <strong>Controllers</strong> = Us URL pe kya kaam karo.
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/routes/index.js</div>
+          <pre><span class="kw">import</span> { Router } <span class="kw">from</span> <span class="str">"express"</span>
+<span class="kw">import</span> AuthRoutes <span class="kw">from</span> <span class="str">"./auth.routes.js"</span>
+
+<span class="kw">const</span> router = <span class="fn">Router</span>()
+router.<span class="fn">use</span>(<span class="str">"/auth"</span>, AuthRoutes)
+
+<span class="kw">export default</span> router</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/routes/auth.routes.js</div>
+          <pre><span class="kw">import</span> { Router } <span class="kw">from</span> <span class="str">"express"</span>
+<span class="kw">import</span> { register, login, getProfile, getAdmin } <span class="kw">from</span> <span class="str">"../controllers/auth.controller.js"</span>
+<span class="kw">import</span> { protect, adminOnly } <span class="kw">from</span> <span class="str">"../middleware/auth.middleware.js"</span>
+
+<span class="kw">const</span> AuthRoutes = <span class="fn">Router</span>()
+
+AuthRoutes.<span class="fn">post</span>(<span class="str">"/register"</span>, register)
+AuthRoutes.<span class="fn">post</span>(<span class="str">"/login"</span>, login)
+AuthRoutes.<span class="fn">get</span>(<span class="str">"/profile"</span>, protect, getProfile)
+AuthRoutes.<span class="fn">get</span>(<span class="str">"/admin"</span>, protect, adminOnly, getAdmin)
+
+<span class="kw">export default</span> AuthRoutes</pre>
+        </div>
+        <div class="note">✅ Final URLs: POST /api/v1/auth/register | POST /api/v1/auth/login</div>
+      </div>
+    </div>
+
+    <!-- T7 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 07</span>
+        <span class="topic-title">Auth Controller — Register + Login</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Register</strong> = Naya user banao + bcrypt + JWT.<br>
+          <strong>Login</strong> = User dhundo + password compare + JWT.
+        </div>
+        <div class="flow">
+          <div class="flow-item"><div class="flow-dot"></div>Data lo — req.body</div>
+          <div class="flow-item"><div class="flow-dot"></div>Validate karo — fields hain?</div>
+          <div class="flow-item"><div class="flow-dot"></div>Email check — pehle se hai?</div>
+          <div class="flow-item"><div class="flow-dot"></div>bcrypt — password hash karo</div>
+          <div class="flow-item"><div class="flow-dot"></div>User.create() — MongoDB mein save</div>
+          <div class="flow-item"><div class="flow-dot"></div>JWT token banao</div>
+          <div class="flow-item"><div class="flow-dot"></div>Response bhejo</div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Register Function</div>
+          <pre><span class="kw">export const</span> <span class="fn">register</span> = <span class="kw">async</span> (req, res) => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { name, email, password } = req.body
+    <span class="kw">if</span> (!name || !email || !password)
+      <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">400</span>).<span class="fn">json</span>({ success: <span class="kw">false</span>, message: <span class="str">"Sab fields do!"</span> })
+
+    <span class="kw">const</span> existing = <span class="kw">await</span> User.<span class="fn">findOne</span>({ email })
+    <span class="kw">if</span> (existing)
+      <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">400</span>).<span class="fn">json</span>({ success: <span class="kw">false</span>, message: <span class="str">"Email already hai!"</span> })
+
+    <span class="kw">const</span> hashed = <span class="kw">await</span> bcrypt.<span class="fn">hash</span>(password, <span class="num">10</span>)
+    <span class="kw">const</span> user = <span class="kw">await</span> User.<span class="fn">create</span>({ name, email, password: hashed })
+    <span class="kw">const</span> token = jwt.<span class="fn">sign</span>({ id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE })
+
+    res.<span class="fn">status</span>(<span class="num">201</span>).<span class="fn">json</span>({ success: <span class="kw">true</span>, token, user: { id: user._id, name: user.name, email: user.email } })
+  } <span class="kw">catch</span> (error) {
+    res.<span class="fn">status</span>(<span class="num">500</span>).<span class="fn">json</span>({ success: <span class="kw">false</span>, message: error.message })
+  }
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- T8 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 08</span>
+        <span class="topic-title">Middleware — protect + adminOnly</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>protect</strong> = Token check karo — logged in hai?<br>
+          <strong>adminOnly</strong> = Role check karo — admin hai?
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/middleware/auth.middleware.js</div>
+          <pre><span class="kw">export const</span> <span class="fn">protect</span> = <span class="kw">async</span> (req, res, next) => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> token = req.headers.authorization?.<span class="fn">split</span>(<span class="str">" "</span>)[<span class="num">1</span>]
+    <span class="kw">if</span> (!token) <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">401</span>).<span class="fn">json</span>({ message: <span class="str">"Login karo!"</span> })
+    <span class="kw">const</span> decoded = jwt.<span class="fn">verify</span>(token, process.env.JWT_SECRET)
+    req.user = <span class="kw">await</span> User.<span class="fn">findById</span>(decoded.id)
+    <span class="fn">next</span>()
+  } <span class="kw">catch</span> { res.<span class="fn">status</span>(<span class="num">401</span>).<span class="fn">json</span>({ message: <span class="str">"Token ghalat!"</span> }) }
+}
+
+<span class="kw">export const</span> <span class="fn">adminOnly</span> = (req, res, next) => {
+  <span class="kw">if</span> (req.user.role !== <span class="str">"admin"</span>)
+    <span class="kw">return</span> res.<span class="fn">status</span>(<span class="num">403</span>).<span class="fn">json</span>({ message: <span class="str">"Sirf admin!"</span> })
+  <span class="fn">next</span>()
+}</pre>
+        </div>
+        <table class="doc-table">
+          <tr><th>Route Type</th><th>Middleware</th></tr>
+          <tr><td>Public</td><td>Koi nahi</td></tr>
+          <tr><td>Protected</td><td>protect</td></tr>
+          <tr><td>Admin</td><td>protect + adminOnly</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- T9 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">BE — 09</span>
+        <span class="topic-title">Seeders — Admin User</span>
+        <span class="topic-tag tag-be">Backend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>Seeders</strong> = Server start pe pehle se data daalna!<br>
+          Admin register se nahi ban sakta — seeders se banta hai!
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/seeders/admin.seeder.js</div>
+          <pre><span class="kw">const</span> <span class="fn">adminSeeder</span> = <span class="kw">async</span> () => {
+  <span class="kw">const</span> existing = <span class="kw">await</span> User.<span class="fn">findOne</span>({ email: <span class="str">"admin@shopply.com"</span> })
+  <span class="kw">if</span> (existing) <span class="kw">return</span> console.<span class="fn">log</span>(<span class="str">"Admin already hai!"</span>)
+
+  <span class="kw">const</span> hashed = <span class="kw">await</span> bcrypt.<span class="fn">hash</span>(<span class="str">"admin123"</span>, <span class="num">10</span>)
+  <span class="kw">await</span> User.<span class="fn">create</span>({ name: <span class="str">"Admin"</span>, email: <span class="str">"admin@shopply.com"</span>, password: hashed, role: <span class="str">"admin"</span> })
+  console.<span class="fn">log</span>(<span class="str">"Admin ban gaya! ✅"</span>)
+}</pre>
+        </div>
+        <div class="note">✅ Admin: admin@shopply.com | Password: admin123</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FRONTEND -->
+  <div class="section">
+    <div class="section-tag">— Client Side</div>
+    <div class="section-title">Frontend Documentation</div>
+    <div class="section-sub">React + Redux Toolkit + RTK Query + Tailwind CSS</div>
+
+    <!-- FE1 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">FE — 01</span>
+        <span class="topic-title">Project Setup + Folder Structure</span>
+        <span class="topic-tag tag-fe">Frontend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="code-wrap">
+          <div class="code-label">Install</div>
+          <pre>npm create vite@latest . -- --template react
+npm install axios react-router-dom @reduxjs/toolkit react-redux
+npm install -D tailwindcss@3 postcss autoprefixer
+npx tailwindcss init -p</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Folder Structure</div>
+          <pre>client/src/
+├── services/     <span class="cm">← RTK Query API calls</span>
+├── store/        <span class="cm">← Redux Store</span>
+├── routes/       <span class="cm">← React Router</span>
+├── pages/        <span class="cm">← Login, Register, Home</span>
+├── components/   <span class="cm">← Reusable components</span>
+└── App.jsx</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- FE2 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">FE — 02</span>
+        <span class="topic-title">Redux Store + RTK Query</span>
+        <span class="topic-tag tag-fe">Frontend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>RTK Query</strong> = API calls automatic — loading, error, data sab!<br>
+          <strong>Store</strong> = Sab reducers ek jagah.
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/services/authApi.js</div>
+          <pre><span class="kw">import</span> { createApi, fetchBaseQuery } <span class="kw">from</span> <span class="str">"@reduxjs/toolkit/query/react"</span>
+
+<span class="kw">export const</span> authApi = <span class="fn">createApi</span>({
+  reducerPath: <span class="str">"authApi"</span>,
+  baseQuery: <span class="fn">fetchBaseQuery</span>({ baseUrl: <span class="str">"http://localhost:5000/api/v1"</span> }),
+  endpoints: (builder) => ({
+    register: builder.<span class="fn">mutation</span>({ query: (data) => ({ url: <span class="str">"/auth/register"</span>, method: <span class="str">"POST"</span>, body: data }) }),
+    login: builder.<span class="fn">mutation</span>({ query: (data) => ({ url: <span class="str">"/auth/login"</span>, method: <span class="str">"POST"</span>, body: data }) }),
+  }),
+})
+
+<span class="kw">export const</span> { useRegisterMutation, useLoginMutation } = authApi</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">src/store/store.js</div>
+          <pre><span class="kw">export const</span> store = <span class="fn">configureStore</span>({
+  reducer: { [authApi.reducerPath]: authApi.reducer },
+  middleware: (get) => get().<span class="fn">concat</span>(authApi.middleware),
+})</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- FE3 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">FE — 03</span>
+        <span class="topic-title">React Router — Routes</span>
+        <span class="topic-tag tag-fe">Frontend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="code-wrap">
+          <div class="code-label">src/routes/AppRoutes.jsx</div>
+          <pre><span class="kw">import</span> { Routes, Route } <span class="kw">from</span> <span class="str">"react-router-dom"</span>
+
+<span class="kw">function</span> <span class="fn">AppRoutes</span>() {
+  <span class="kw">return</span> (
+    <span class="tag">&lt;Routes&gt;</span>
+      <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/"</span>         <span class="attr">element</span>=<span class="val">{&lt;Home /&gt;}</span>     <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/login"</span>    <span class="attr">element</span>=<span class="val">{&lt;Login /&gt;}</span>    <span class="tag">/&gt;</span>
+      <span class="tag">&lt;Route</span> <span class="attr">path</span>=<span class="str">"/register"</span> <span class="attr">element</span>=<span class="val">{&lt;Register /&gt;}</span> <span class="tag">/&gt;</span>
+    <span class="tag">&lt;/Routes&gt;</span>
+  )
+}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- FE4 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">FE — 04</span>
+        <span class="topic-title">Login + Register Pages</span>
+        <span class="topic-tag tag-fe">Frontend</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          RTK Query hooks use karke API call karo — token localStorage mein save karo!
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Login — API Connect</div>
+          <pre><span class="kw">const</span> [login, { isLoading, isError, error }] = <span class="fn">useLoginMutation</span>()
+
+<span class="kw">const</span> <span class="fn">handleSubmit</span> = <span class="kw">async</span> (e) => {
+  e.<span class="fn">preventDefault</span>()
+  <span class="kw">const</span> result = <span class="kw">await</span> <span class="fn">login</span>({ email, password }).<span class="fn">unwrap</span>()
+  localStorage.<span class="fn">setItem</span>(<span class="str">"token"</span>, result.token)
+  <span class="fn">navigate</span>(<span class="str">"/"</span>)
+}</pre>
+        </div>
+        <table class="doc-table">
+          <tr><th>Hook</th><th>Kaam</th></tr>
+          <tr><td>useLoginMutation</td><td>Login API call</td></tr>
+          <tr><td>useRegisterMutation</td><td>Register API call</td></tr>
+          <tr><td>isLoading</td><td>Loading state</td></tr>
+          <tr><td>isError</td><td>Error state</td></tr>
+          <tr><td>.unwrap()</td><td>Result lo ya error throw</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- FE5 -->
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">FE — 05</span>
+        <span class="topic-title">CORS — Frontend + Backend Connect</span>
+        <span class="topic-tag tag-both">Both</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <div class="desc-box">
+          <strong>CORS</strong> = React (5173) aur Express (5000) ko baat karne do!
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">Backend — server.js</div>
+          <pre>app.<span class="fn">use</span>(<span class="fn">cors</span>({
+  origin: process.env.FRONTEND_URL,
+  credentials: <span class="kw">true</span>
+}))</pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-label">.env</div>
+          <pre>FRONTEND_URL=http://localhost:<span class="num">5173</span></pre>
+        </div>
+        <div class="flow">
+          <div class="flow-item"><div class="flow-dot"></div>React → API call → localhost:5000</div>
+          <div class="flow-item"><div class="flow-dot"></div>CORS check → origin allowed?</div>
+          <div class="flow-item"><div class="flow-dot"></div>✅ Allow → Response bhejo</div>
+          <div class="flow-item"><div class="flow-dot"></div>❌ Block → Browser error</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- STATUS CODES -->
+  <div class="section">
+    <div class="section-tag">— Reference</div>
+    <div class="section-title">Status Codes + API Endpoints</div>
+
+    <div class="topic-card" onclick="tog(this)">
+      <div class="topic-header">
+        <span class="topic-num">REF</span>
+        <span class="topic-title">Complete API Reference</span>
+        <span class="topic-tag tag-both">Reference</span>
+        <span class="topic-arrow">▼</span>
+      </div>
+      <div class="topic-body">
+        <table class="doc-table">
+          <tr><th>Method</th><th>URL</th><th>Access</th></tr>
+          <tr><td>POST</td><td>/api/v1/auth/register</td><td>Public</td></tr>
+          <tr><td>POST</td><td>/api/v1/auth/login</td><td>Public</td></tr>
+          <tr><td>GET</td><td>/api/v1/auth/profile</td><td>Protected</td></tr>
+          <tr><td>GET</td><td>/api/v1/auth/admin</td><td>Admin Only</td></tr>
+        </table>
+        <table class="doc-table" style="margin-top:16px">
+          <tr><th>Code</th><th>Matlab</th></tr>
+          <tr><td>200</td><td>OK</td></tr>
+          <tr><td>201</td><td>Created</td></tr>
+          <tr><td>400</td><td>Bad Request</td></tr>
+          <tr><td>401</td><td>Unauthorized</td></tr>
+          <tr><td>403</td><td>Forbidden</td></tr>
+          <tr><td>404</td><td>Not Found</td></tr>
+          <tr><td>500</td><td>Server Error</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function tog(card) {
+  const wasOpen = card.classList.contains('open')
+  document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('open'))
+  if (!wasOpen) card.classList.add('open')
+}
+</script>
+</body>
+</html>
+
+
