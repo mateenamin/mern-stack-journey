@@ -4,12 +4,16 @@ import connectDB from "./config/config.js"; // 👈 Step B: Database file ko imp
 import router from "./routes/index.route.js";
 import logger from "./middleware/logger.middleware.js";
 import adminSeeder from "./seeders/admin.seeder.js"
+import cors from "cors"
 
 
 const app = express()
 const PORT = process.env.PORT
 
-
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}))
 
 app.use(express.json());
                 
